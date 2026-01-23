@@ -119,7 +119,7 @@ export class EmailWorkflowService {
         return sendCustomWorkflowEmail({
           to: email,
           ...emailWorkflowContent,
-        });
+        }, evt);
       })
     );
 

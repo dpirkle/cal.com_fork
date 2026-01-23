@@ -8,6 +8,7 @@ import FeedbackEmail from "./templates/feedback-email";
 import MonthlyDigestEmail from "./templates/monthly-digest-email";
 import type { WorkflowEmailData } from "./templates/workflow-email";
 import WorkflowEmail from "./templates/workflow-email";
+import { CalendarEvent } from "@calcom/types/Calendar";
 
 const sendEmail = (prepare: () => BaseEmail) => {
   return new Promise((resolve, reject) => {
@@ -24,8 +25,8 @@ export const sendFeedbackEmail = async (feedback: Feedback) => {
   await sendEmail(() => new FeedbackEmail(feedback));
 };
 
-export const sendCustomWorkflowEmail = async (emailData: WorkflowEmailData) => {
-  await sendEmail(() => new WorkflowEmail(emailData));
+export const sendCustomWorkflowEmail = async (emailData: WorkflowEmailData, calEvent?: CalendarEvent) => {
+  await sendEmail(() => new WorkflowEmail(emailData, calEvent));
 };
 
 export const sendMonthlyDigestEmail = async (eventData: MonthlyDigestEmailData) => {

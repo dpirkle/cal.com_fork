@@ -10,6 +10,7 @@ import { setTestEmail } from "@calcom/lib/testEmails";
 import { prisma } from "@calcom/prisma";
 
 import { sanitizeDisplayName } from "../lib/sanitizeDisplayName";
+import { sendEmailWithResend } from "./resend-integration";
 
 export default class BaseEmail {
   name = "";
@@ -60,6 +61,11 @@ export default class BaseEmail {
 
     const sanitizedFrom = sanitizeDisplayName(from);
     const sanitizedTo = sanitizeDisplayName(to);
+
+    if (process.env.RESEND_HTTP_API_KEY) {
+      await sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
+      // return await sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
+    }
 
     const parseSubject = z.string().safeParse(payload?.subject);
     const payloadWithUnEscapedSubject = {

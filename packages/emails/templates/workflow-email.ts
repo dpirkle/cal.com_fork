@@ -3,6 +3,7 @@ import { JSDOM } from "jsdom";
 import { SENDER_NAME } from "@calcom/lib/constants";
 
 import BaseEmail from "./_base-email";
+import { CalendarEvent } from "@calcom/types/Calendar";
 
 export type Attachment = {
   content: string;
@@ -21,10 +22,12 @@ export type WorkflowEmailData = {
 
 export default class WorkflowEmail extends BaseEmail {
   mailData: WorkflowEmailData;
+  calEvent: CalendarEvent | undefined;
 
-  constructor(mailData: WorkflowEmailData) {
+  constructor(mailData: WorkflowEmailData, calEvent?: CalendarEvent) {
     super();
     this.mailData = mailData;
+    this.calEvent = calEvent;
   }
 
   protected async getNodeMailerPayload(): Promise<Record<string, unknown>> {
