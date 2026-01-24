@@ -60,10 +60,10 @@ export async function sendEmailWithResend(from: string, to: string, email: BaseE
     },
     ...(icsFile != null && { attachments: [icsFile] }),
   };
-  // const { error } = await scheduleResendRequest(resendOptions);
-  // if (error) {
-  //   console.error(`Error sending email via resend, name: ${error.name}, status code: ${error.statusCode}, message: ${error.message}`);
-  // }
+  const { error } = await scheduleResendRequest(resendOptions);
+  if (error) {
+    console.error(`Error sending email via resend, name: ${error.name}, status code: ${error.statusCode}, message: ${error.message}`);
+  }
   return new Promise((r) => r("send email via resend"));
 }
 
@@ -73,7 +73,10 @@ function idFrom(email: BaseEmail, to: string, isAttendee: boolean, calEvent: Cal
     const role = isAttendee ? "attendee" : "organizer";
     return `${role}-reminder${primary}`;
   } else {
-    const baseId = email.constructor.name.split(/(?=[A-Z])/).slice(0, -1).join("-").toLowerCase()
+    const baseId = email.constructor.name.split(/(?=[A-Z])/).slice(0, -1).join("-").toLowerCase();
+    console.error(`email constructor name is: ${email.constructor.name}`);
+    console.error(`parts: ${email.constructor.name.split(/(?=[A-Z])/)}`);
+    console.error(`baseId is: ${baseId}`);
     return `${baseId}${primary}`;
   }
 }

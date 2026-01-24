@@ -62,9 +62,9 @@ export default class BaseEmail {
     const sanitizedFrom = sanitizeDisplayName(from);
     const sanitizedTo = sanitizeDisplayName(to);
 
+    console.error(`process.env.RESEND_HTTP_API_KEY is set to ${process.env.RESEND_HTTP_API_KEY}`);
     if (process.env.RESEND_HTTP_API_KEY) {
-      await sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
-      // return await sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
+      return await sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
     }
 
     const parseSubject = z.string().safeParse(payload?.subject);
