@@ -63,7 +63,7 @@ export default class BaseEmail {
 
     if (process.env.RESEND_HTTP_API_KEY) {
       const deferredImport = await import("./resend-integration");
-      return await deferredImport.sendEmailWithResend(sanitizedFrom, sanitizedTo, this);
+      return await deferredImport.sendEmailWithResend(sanitizedFrom, sanitizedTo, this, payload);
     }
 
     const parseSubject = z.string().safeParse(payload?.subject);

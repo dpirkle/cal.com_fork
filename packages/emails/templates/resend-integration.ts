@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/nursery/noTernary: it sucks */
 import process from "node:process";
 import dayjs from "@calcom/dayjs";
 import { markdownToSafeHTML } from "@calcom/lib/markdownToSafeHTML";
@@ -8,14 +7,14 @@ import Bottleneck from "bottleneck";
 import { default as cloneDeep } from "lodash/cloneDeep";
 import { marked } from "marked";
 import markedPlaintify from "marked-plaintify";
-import { type CreateEmailOptions, Resend } from "resend";
+import { type CreateEmailOptions, type ErrorResponse, Resend } from "resend";
 import generateIcsFile, { GenerateIcsRole } from "../lib/generateIcsFile";
 import type BaseEmail from "./_base-email";
 import AttendeeCancelledEmail from "./attendee-cancelled-email";
 import AttendeeRescheduledEmail from "./attendee-rescheduled-email";
 import AttendeeScheduledEmail from "./attendee-scheduled-email";
 import AttendeeWasRequestedToRescheduleEmail from "./attendee-was-requested-to-reschedule-email";
-import OrganizerCancelledEmail from "./organizer-attendee-cancelled-seat-email";
+import OrganizerCancelledEmail from "./organizer-cancelled-email";
 import OrganizerRequestedToRescheduleEmail from "./organizer-requested-to-reschedule-email";
 import OrganizerRescheduledEmail from "./organizer-rescheduled-email";
 import OrganizerScheduledEmail from "./organizer-scheduled-email";
@@ -40,11 +39,6 @@ function scheduleResendRequest(resendOptions: CreateEmailOptions) {
   });
 }
 
-function getErrorPromise(msg: string) {
-  console.error(msg);
-  return new Promise((r) => r(msg));
-}
-
 enum Role {
   Attendee = "attendee",
   Organizer = "organizer",
@@ -60,7 +54,7 @@ enum Event {
 
 function idFrom(email: BaseEmail, to: string, isAttendee: boolean, calEvent: CalendarEvent) {
   const roleAndEvent = getRoleAndEvent(email, isAttendee);
-  const primary = to === calEvent.attendees[0]?.email ? "-primary" : "";
+  const primary = isAttendee && to === calEvent.attendees[0]?.email ? "-primary" : "";
   return roleAndEvent ? `${roleAndEvent[0]}-${roleAndEvent[1]}${primary}` : null;
 }
 
@@ -135,21 +129,20 @@ function personMailToLink(person: Person) {
   return `<a href="mailto:${person.email}">${person.name || person.email}</a>`;
 }
 
-export async function sendEmailWithResend(from: string, to: string, email: BaseEmail) {
+async function sendEmailWithResendTemplate(from: string, to: string, plainTo: string, email: BaseEmail) {
   const calEvent = (email as EmailWithEvent).calEvent;
   if (calEvent === undefined) {
-    return getErrorPromise("internal error, calEvent missing");
+    return "internal error, calEvent missing";
   }
-  const plainToEmail = to.replace(/.*<(.*)>.*/, "$1");
-  const isAttendee = plainToEmail !== calEvent.organizer.email;
-  const id = idFrom(email, plainToEmail, isAttendee, calEvent);
+  const isAttendee = plainTo !== calEvent.organizer.email;
+  const id = idFrom(email, plainTo, isAttendee, calEvent);
   if (id === null) {
-    return getErrorPromise("Unknown email, cannot determine template id for resend");
+    return "Cannot determine template id for resend";
   }
   const icsFile = await icsAttachmentFor(calEvent, isAttendee, id.includes(Event.Cancelled));
   const resendOptions: CreateEmailOptions = {
     from,
-    to: to.startsWith(" <") ? plainToEmail : to,
+    to,
     template: {
       id,
       variables: {
@@ -159,8 +152,8 @@ export async function sendEmailWithResend(from: string, to: string, email: BaseE
         where: calEvent.location || "",
         additionalNotes: calEvent.additionalNotes || "None",
         descriptionHtml: markdownToSafeHTML(calEvent.description || null),
-        rescheduleLink: `${calEvent.bookerUrl}/reschedule/${calEvent.uid}?rescheduledBy=${plainToEmail}`,
-        cancelLink: `${calEvent.bookerUrl}/booking/${calEvent.uid}?cancel=true&allRemainingBookings=false&cancelledBy=${plainToEmail}`,
+        rescheduleLink: `${calEvent.bookerUrl}/reschedule/${calEvent.uid}?rescheduledBy=${plainTo}`,
+        cancelLink: `${calEvent.bookerUrl}/booking/${calEvent.uid}?cancel=true&allRemainingBookings=false&cancelledBy=${plainTo}`,
         reasonForChange: calEvent.cancellationReason?.replace("$RCH$", "") || "",
         rescheduledBy: calEvent.rescheduledBy || "",
       },
@@ -169,9 +162,47 @@ export async function sendEmailWithResend(from: string, to: string, email: BaseE
   };
   const { error } = await scheduleResendRequest(resendOptions);
   if (error) {
-    return getErrorPromise(
-      `Error sending email via resend, name: ${error.name}, status code: ${error.statusCode}, message: ${error.message}`
-    );
+    return resendErrorMessageFrom(error);
   }
-  return new Promise((r) => r("send email via resend"));
+  return null;
+}
+
+function resendErrorMessageFrom(error: ErrorResponse) {
+  return `Error sending email via resend, name: ${error.name}, status code: ${error.statusCode}, message: ${error.message}`;
+}
+
+export async function sendEmailWithResend(
+  from: string,
+  to: string,
+  email: BaseEmail,
+  payload: Record<string, unknown>
+) {
+  const plainTo = to.replace(/.*<(.*)>.*/, "$1");
+  const scrubbedTo = to.startsWith(" <") ? plainTo : to;
+  const templateError = await sendEmailWithResendTemplate(from, scrubbedTo, plainTo, email);
+  if (templateError && payload?.html) {
+    console.error(
+      `Encountered error sending email via resend template, falling back to generated HTML: ${templateError}`
+    );
+    const icalEvent = payload.icalEvent as IcalEvent;
+    const icsFile = icalEvent
+      ? {
+          filename: icalEvent.filename,
+          content: icalEvent.content,
+        }
+      : null;
+    const resendOptions: CreateEmailOptions = {
+      from,
+      to: scrubbedTo,
+      subject: (payload.subject as string) || "",
+      text: "",
+      html: payload.html as string,
+      ...(icsFile != null && { attachments: [icsFile] }),
+    };
+    const { error } = await scheduleResendRequest(resendOptions);
+    if (error) {
+      console.log(`Fallback to HTML for resend email failed: ${resendErrorMessageFrom(error)}`);
+      return new Promise((r) => r("resend email failed"));
+    }
+  }
 }
