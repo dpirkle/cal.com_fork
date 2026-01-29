@@ -118,7 +118,7 @@
             "useQwikValidLexicalScope": "off",
             "useExplicitType": "off",
             "noReactForwardRef": "warn",
-            "noTernary": "info",
+            "noTernary": "off",
             "noUnresolvedImports": "warn",
             "useSortedClasses": {
               "level": "warn",
@@ -130,7 +130,7 @@
           },
           "correctness": {
             "useImportExtensions": "warn",
-            "noProcessGlobal": "warn",
+            "noProcessGlobal": "off",
             "useExhaustiveDependencies": "warn",
             "noUnknownProperty": "warn",
             "noUnreachable": "warn",
@@ -141,14 +141,14 @@
             "noUnsafeOptionalChaining": "warn"
           },
           "style": {
-            "useExportsLast": "warn",
-            "noProcessEnv": "warn",
+            "useExportsLast": "off",
+            "noProcessEnv": "off",
             "useNodejsImportProtocol": "error",
             "noNestedTernary": "warn"
           },
           "complexity": {
             "noExcessiveLinesPerFunction": {
-              "level": "warn",
+              "level": "off",
               "options": {
                 "maxLines": 100,
                 "skipBlankLines": true

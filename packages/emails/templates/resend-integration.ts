@@ -59,24 +59,29 @@ function idFrom(email: BaseEmail, to: string, isAttendee: boolean, calEvent: Cal
 }
 
 function getRoleAndEvent(email: BaseEmail, isAttendee: boolean): [Role, Event] | null {
+  // The order of these conditionals matters, because some of the classes inherit from the others.
+  // Specifically, the last 2 tests are for superclasses of some of the preceeding classes, so their
+  // tests need to be at the bottom. An altenative might be a switch based on email.constructor,
+  // which is the actual class of the email instance, but I'm not 100% sure how the code mangler
+  // would effect that.
   if (email instanceof AttendeeCancelledEmail) {
     return [Role.Attendee, Event.Cancelled];
   } else if (email instanceof AttendeeRescheduledEmail) {
     return [Role.Attendee, Event.Rescheduled];
-  } else if (email instanceof AttendeeScheduledEmail) {
-    return [Role.Attendee, Event.Scheduled];
   } else if (email instanceof AttendeeWasRequestedToRescheduleEmail) {
     return [Role.Attendee, Event.RequestReschedule];
   } else if (email instanceof OrganizerCancelledEmail) {
     return [Role.Organizer, Event.Cancelled];
   } else if (email instanceof OrganizerRescheduledEmail) {
     return [Role.Organizer, Event.Rescheduled];
-  } else if (email instanceof OrganizerScheduledEmail) {
-    return [Role.Organizer, Event.Scheduled];
   } else if (email instanceof OrganizerRequestedToRescheduleEmail) {
     return [Role.Organizer, Event.RequestReschedule];
   } else if (email instanceof WorkflowEmail) {
     return [isAttendee ? Role.Attendee : Role.Organizer, Event.Reminder];
+  } else if (email instanceof AttendeeScheduledEmail) {
+    return [Role.Attendee, Event.Scheduled];
+  } else if (email instanceof OrganizerScheduledEmail) {
+    return [Role.Organizer, Event.Scheduled];
   } else {
     return null;
   }
@@ -156,6 +161,7 @@ async function sendEmailWithResendTemplate(from: string, to: string, plainTo: st
         cancelLink: `${calEvent.bookerUrl}/booking/${calEvent.uid}?cancel=true&allRemainingBookings=false&cancelledBy=${plainTo}`,
         reasonForChange: calEvent.cancellationReason?.replace("$RCH$", "") || "",
         rescheduledBy: calEvent.rescheduledBy || "",
+        requestForRescheduleBookingLink: `${calEvent.bookerUrl}/reschedule/${calEvent.uid}?allowRescheduleForCancelledBooking=true`,
       },
     },
     ...(icsFile != null && { attachments: [icsFile] }),
