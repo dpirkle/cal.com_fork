@@ -58,7 +58,7 @@ const buildICalLink = ({
   return `data:text/calendar,${encodeURIComponent(iCalEvent.value ? iCalEvent.value : false)}`;
 };
 
-const buildGoogleCalendarLink = ({
+export const buildGoogleCalendarLink = ({
   startTime,
   endTime,
   eventName,
@@ -112,7 +112,7 @@ const buildMicrosoftOfficeLink = ({
   return microsoftOfficeLink;
 };
 
-const buildMicrosoftOutlookLink = ({
+export const buildMicrosoftOutlookLink = ({
   startTime,
   endTime,
   eventName,

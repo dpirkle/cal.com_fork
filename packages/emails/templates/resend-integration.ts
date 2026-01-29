@@ -1,5 +1,9 @@
 import process from "node:process";
 import dayjs from "@calcom/dayjs";
+import {
+  buildGoogleCalendarLink,
+  buildMicrosoftOutlookLink,
+} from "@calcom/features/bookings/lib/getCalendarLinks";
 import { markdownToSafeHTML } from "@calcom/lib/markdownToSafeHTML";
 import { TimeFormat } from "@calcom/lib/timeFormat";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
@@ -107,11 +111,12 @@ function convertToPlainText(markdownText: string) {
 
 async function icsAttachmentFor(
   calEvent: CalendarEvent,
+  plainEventDescription: string,
   isAttendee: boolean,
   isCancelled: boolean
 ): Promise<IcalEvent> {
   const clonedCalEvent = cloneDeep(calEvent);
-  clonedCalEvent.description = await convertToPlainText(calEvent.description || "");
+  clonedCalEvent.description = plainEventDescription;
   const icalEvent = generateIcsFile({
     calEvent: clonedCalEvent,
     role: isAttendee ? GenerateIcsRole.ATTENDEE : GenerateIcsRole.ORGANIZER,
@@ -144,7 +149,14 @@ async function sendEmailWithResendTemplate(from: string, to: string, plainTo: st
   if (id === null) {
     return "Cannot determine template id for resend";
   }
-  const icsFile = await icsAttachmentFor(calEvent, isAttendee, id.includes(Event.Cancelled));
+  const plainEventDescription = await convertToPlainText(calEvent.description || "");
+  const calendarLinks = await getCalendarLinks(calEvent, plainEventDescription);
+  const icsFile = await icsAttachmentFor(
+    calEvent,
+    plainEventDescription,
+    isAttendee,
+    id.includes(Event.Cancelled)
+  );
   const resendOptions: CreateEmailOptions = {
     from,
     to,
@@ -159,9 +171,10 @@ async function sendEmailWithResendTemplate(from: string, to: string, plainTo: st
         descriptionHtml: markdownToSafeHTML(calEvent.description || null),
         rescheduleLink: `${calEvent.bookerUrl}/reschedule/${calEvent.uid}?rescheduledBy=${plainTo}`,
         cancelLink: `${calEvent.bookerUrl}/booking/${calEvent.uid}?cancel=true&allRemainingBookings=false&cancelledBy=${plainTo}`,
-        reasonForChange: calEvent.cancellationReason?.replace("$RCH$", "") || "",
+        reasonForChange: calEvent.cancellationReason?.replace("$RCH$", "") || "None given",
         rescheduledBy: calEvent.rescheduledBy || "",
         requestForRescheduleBookingLink: `${calEvent.bookerUrl}/reschedule/${calEvent.uid}?allowRescheduleForCancelledBooking=true`,
+        ...calendarLinks,
       },
     },
     ...(icsFile != null && { attachments: [icsFile] }),
@@ -175,6 +188,20 @@ async function sendEmailWithResendTemplate(from: string, to: string, plainTo: st
 
 function resendErrorMessageFrom(error: ErrorResponse) {
   return `Error sending email via resend, name: ${error.name}, status code: ${error.statusCode}, message: ${error.message}`;
+}
+
+async function getCalendarLinks(calEvent: CalendarEvent, eventDescription: string) {
+  const eventInfo = {
+    startTime: dayjs(calEvent.startTime),
+    endTime: dayjs(calEvent.endTime),
+    eventName: calEvent.title,
+    eventDescription,
+    bookingLocation: null,
+    recurringEvent: null,
+  };
+  const googleCalendarLink = buildGoogleCalendarLink(eventInfo);
+  const microsoftOutlookLink = buildMicrosoftOutlookLink(eventInfo);
+  return { googleCalendarLink, microsoftOutlookLink };
 }
 
 export async function sendEmailWithResend(
