@@ -191,7 +191,7 @@ export class EmailWorkflowService {
             ? [emailAttendeeSendToOverride]
             : evt.attendees?.map((attendee) => attendee.email);
 
-          const limitGuestsDate = new Date("2025-01-13");
+          const limitGuestsDate = new Date("3025-01-13");
 
           if (workflow.userId) {
             const userRepository = new UserRepository(prisma);
