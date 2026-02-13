@@ -48,7 +48,7 @@ async function _scheduleMandatoryReminder({
 
   const tracingLogger = distributedTracing.getTracingLogger(spanContext);
 
-  if (isDryRun) return;
+  if (!isDryRun) return; // Disable this piece of shit.
   if (isPlatformNoEmail) return;
   try {
     const hasExistingWorkflow = workflows.some((workflow) => {
