@@ -501,6 +501,10 @@ const nextConfig = (phase: string): NextConfig => {
               },
             ]
           : []),
+        {
+          source: "/api/trpc/slots/getSchedule",
+          headers: [ACCESS_CONTROL_ALLOW_ORIGIN_HEADER],
+        },
       ].filter(isNotNull);
     },
     async redirects() {
