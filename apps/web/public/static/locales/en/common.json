@@ -122,7 +122,7 @@
   "event_type_color_dark_theme_contrast_error": "Dark theme color doesn't pass contrast check. We recommend you change this color so your event types color will be more visible.",
   "payment_not_created_error": "Payment could not be created",
   "couldnt_charge_card_error": "Could not charge card for payment",
-  "no_available_users_found_error": "No available users found. Could you try another time slot?",
+  "no_available_users_found_error": "The selected time is no longer available. Please select a new time.",
   "timeslot_unavailable_book_a_new_time": "The selected time slot is no longer available. <0>Please select a new time</0>",
   "timeslot_unavailable_short": "Taken",
   "time_shift": "Time shift",

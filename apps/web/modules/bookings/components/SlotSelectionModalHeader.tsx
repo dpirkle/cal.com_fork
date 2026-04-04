@@ -5,7 +5,7 @@ import type { Timezone } from "@calcom/features/bookings/Booker/types";
 import { useTimePreferences } from "@calcom/features/bookings/lib";
 import type { BookerEvent } from "@calcom/features/bookings/types";
 import { EventDetailBlocks } from "@calcom/features/bookings/types";
-import type { TimezoneSelectComponentProps } from "@calcom/features/timezone/components/TimezoneSelectComponent";
+import type { TimezoneSelectComponentProps } from "@calcom/features/components/timezone-select";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { CURRENT_TIMEZONE } from "@calcom/lib/timezoneConstants";
 import { Button } from "@calcom/ui/components/button";
@@ -29,10 +29,7 @@ type TimezoneSelectProps = Omit<
 };
 
 const WebTimezoneSelect: ComponentType<TimezoneSelectProps> = dynamic(
-  () =>
-    import("@calcom/features/components/timezone-select").then(
-      (mod) => mod.TimezoneSelect
-    ),
+  () => import("@calcom/features/components/timezone-select").then((mod) => mod.TimezoneSelect),
   {
     ssr: false,
     loading: () => <LoadingState />,
@@ -103,9 +100,7 @@ export const SlotSelectionModalHeader = ({
           <span className="text-default text-sm">{formattedDate.fullDate}</span>
         </div>
 
-        {event && (
-          <EventDetails event={event} blocks={[EventDetailBlocks.DURATION]} />
-        )}
+        {event && <EventDetails event={event} blocks={[EventDetailBlocks.DURATION]} />}
 
         <div className="mb-0 flex items-center gap-2 text-default text-sm">
           <Icon name="globe" className="h-4 w-4 shrink-0 text-subtle" />

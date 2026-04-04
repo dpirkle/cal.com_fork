@@ -1,14 +1,14 @@
-import type { TFunction } from "i18next";
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import type { FieldError } from "react-hook-form";
-
 import { getPaymentAppData } from "@calcom/app-store/_utils/payments/getPaymentAppData";
-import { useIsPlatformBookerEmbed } from "@calcom/atoms/hooks/useIsPlatformBookerEmbed";
 import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
+import { useBookerTime } from "@calcom/features/bookings/Booker/components/hooks/useBookerTime";
+import type { UseBookingFormReturnType } from "@calcom/features/bookings/Booker/components/hooks/useBookingForm";
+import type {
+  IUseBookingErrors,
+  IUseBookingLoadingStates,
+} from "@calcom/features/bookings/Booker/components/hooks/useBookings";
+import { formatEventFromTime } from "@calcom/features/bookings/Booker/utils/dates";
 import type { BookerEvent } from "@calcom/features/bookings/types";
 import ServerTrans from "@calcom/lib/components/ServerTrans";
-import { WEBSITE_PRIVACY_POLICY_URL, WEBSITE_TERMS_URL } from "@calcom/lib/constants";
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { TimeFormat } from "@calcom/lib/timeFormat";
@@ -16,11 +16,10 @@ import { Alert } from "@calcom/ui/components/alert";
 import { Button } from "@calcom/ui/components/button";
 import { EmptyScreen } from "@calcom/ui/components/empty-screen";
 import { Form } from "@calcom/ui/components/form";
-
-import { formatEventFromTime } from "@calcom/features/bookings/Booker/utils/dates";
-import { useBookerTime } from "@calcom/features/bookings/Booker/components/hooks/useBookerTime";
-import type { UseBookingFormReturnType } from "@calcom/features/bookings/Booker/components/hooks/useBookingForm";
-import type { IUseBookingErrors, IUseBookingLoadingStates } from "@calcom/features/bookings/Booker/components/hooks/useBookings";
+import type { TFunction } from "i18next";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import type { FieldError } from "react-hook-form";
 import { BookingFields } from "./BookingFields";
 import { FormSkeleton } from "./Skeleton";
 
@@ -77,7 +76,6 @@ export const BookEventForm = ({
   const rescheduleUid = useBookerStoreContext((state) => state.rescheduleUid);
   const username = useBookerStoreContext((state) => state.username);
   const isInstantMeeting = useBookerStoreContext((state) => state.isInstantMeeting);
-  const isPlatformBookerEmbed = useIsPlatformBookerEmbed();
   const { timeFormat, timezone } = useBookerTime();
 
   const [responseVercelIdHeader] = useState<string | null>(null);
@@ -179,52 +177,6 @@ export const BookEventForm = ({
           </div>
         ) : null}
 
-        {!isPlatform && (
-          <div className="text-subtle my-3 w-full text-xs">
-            <ServerTrans
-              t={t}
-              i18nKey="signing_up_terms"
-              components={[
-                <Link
-                  className="text-emphasis hover:underline"
-                  key="terms"
-                  href={`${WEBSITE_TERMS_URL}`}
-                  target="_blank">
-                  Terms
-                </Link>,
-                <Link
-                  className="text-emphasis hover:underline"
-                  key="privacy"
-                  href={`${WEBSITE_PRIVACY_POLICY_URL}`}
-                  target="_blank">
-                  Privacy Policy.
-                </Link>,
-              ]}
-            />
-          </div>
-        )}
-
-        {isPlatformBookerEmbed && (
-          <div className="text-subtle my-3 w-full text-xs">
-            {t("proceeding_agreement")}{" "}
-            <Link
-              className="text-emphasis hover:underline"
-              key="terms"
-              href={`${WEBSITE_TERMS_URL}`}
-              target="_blank">
-              {t("terms")}
-            </Link>{" "}
-            {t("and")}{" "}
-            <Link
-              className="text-emphasis hover:underline"
-              key="privacy"
-              href={`${WEBSITE_PRIVACY_POLICY_URL}`}
-              target="_blank">
-              {t("privacy_policy")}
-            </Link>
-            .
-          </div>
-        )}
         <div className="modalsticky mt-auto flex justify-end space-x-2 rtl:space-x-reverse">
           {isInstantMeeting ? (
             <Button type="submit" color="primary" loading={loadingStates.creatingInstantBooking}>
@@ -261,10 +213,10 @@ export const BookEventForm = ({
                 {rescheduleUid && bookingData
                   ? t("reschedule")
                   : renderConfirmNotVerifyEmailButtonCond
-                  ? isPaidEvent
-                    ? t("pay_and_book")
-                    : t("confirm")
-                  : t("verify_email_button")}
+                    ? isPaidEvent
+                      ? t("pay_and_book")
+                      : t("confirm")
+                    : t("verify_email_button")}
               </Button>
             </>
           )}
