@@ -18,6 +18,7 @@ import type { BookerProps, WrappedBookerProps } from "@calcom/features/bookings/
 import { isBookingDryRun } from "@calcom/features/bookings/Booker/utils/isBookingDryRun";
 import { isTimeSlotAvailable } from "@calcom/features/bookings/Booker/utils/isTimeslotAvailable";
 import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import type { SlotInfo, Slots } from "@calcom/features/calendars/lib/types";
 import { Dialog } from "@calcom/features/components/controlled-dialog";
 import { useNonEmptyScheduleDays } from "@calcom/features/schedules/lib/use-schedule/useNonEmptyScheduleDays";
 import { scrollIntoViewSmooth } from "@calcom/lib/browser/browser.utils";
@@ -30,10 +31,11 @@ import { useCompatSearchParams } from "@calcom/lib/hooks/useCompatSearchParams";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
 import classNames from "@calcom/ui/classNames";
 import { DialogContent } from "@calcom/ui/components/dialog";
+import { CheckboxField } from "@calcom/ui/components/form";
 import { UnpublishedEntity } from "@calcom/ui/components/unpublished-entity";
 import PoweredBy from "@calcom/web/modules/ee/common/components/PoweredBy";
 import { AnimatePresence, LazyMotion, m } from "framer-motion";
-import { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import StickyBox from "react-sticky-box";
 import { Toaster } from "sonner";
 import { shallow } from "zustand/shallow";
@@ -130,7 +132,40 @@ const BookerComponent = ({
     shallow
   );
 
-  const nonEmptyScheduleDays = useNonEmptyScheduleDays(schedule?.data?.slots).filter(
+  const [filters, setFilters] = React.useState<{ [key: string]: string[] | [] }>({});
+
+  const toggleFilter = (minTime: number, maxTime: number, isOn: boolean) => {
+    const filterKey = `${minTime}:${maxTime}`;
+    const filterValue = isOn ? [minTime, maxTime].map((t) => t.toString().padStart(2, "0")) : [];
+    setFilters((currFilters) => ({
+      ...currFilters,
+      ...{ [filterKey]: filterValue },
+    }));
+  };
+
+  const isFilterActive = (minTime: number, maxTime: number) => filters[`${minTime}:${maxTime}`]?.length === 2;
+
+  const filteredSlots = useMemo(() => {
+    if (!schedule?.data) {
+      return undefined;
+    }
+    const slots = schedule.data.slots as Slots;
+    if (Object.values(filters).every((f) => f.length === 0)) {
+      return slots;
+    }
+    const filteredEntries = Object.entries(slots).map(([day, slots]) => {
+      const dayFilters = Object.values(filters).map((filter) =>
+        filter.map((t) => dayjs(`${day} ${t}`).utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"))
+      );
+      const filtered = slots.filter((slot) =>
+        dayFilters.some(([min, max]) => slot.time >= min && slot.time <= max)
+      );
+      return [day, filtered] as [string, SlotInfo[]];
+    });
+    return Object.fromEntries(filteredEntries.filter(([_d, slots]) => slots.length > 0));
+  }, [filters, schedule.data]);
+
+  const nonEmptyScheduleDays = useNonEmptyScheduleDays(filteredSlots).filter(
     (slot) => dayjs(selectedDate).diff(slot, "day") <= 0
   );
 
@@ -256,7 +291,7 @@ const BookerComponent = ({
   const unavailableTimeSlots = isQuickAvailabilityCheckFeatureEnabled
     ? allSelectedTimeslots.filter((slot) => {
         return !isTimeSlotAvailable({
-          scheduleData: schedule?.data ?? null,
+          slots: filteredSlots,
           slotToCheckInIso: slot,
           quickAvailabilityChecks: slots.quickAvailabilityChecks,
         });
@@ -453,24 +488,44 @@ const BookerComponent = ({
                   />
                 )}
                 {!hideEventTypeDetails && (
-                  <EventMeta
-                    selectedTimeslot={selectedTimeslot}
-                    classNames={{
-                      eventMetaContainer: customClassNames?.eventMetaCustomClassNames?.eventMetaContainer,
-                      eventMetaTitle: customClassNames?.eventMetaCustomClassNames?.eventMetaTitle,
-                      eventMetaTimezoneSelect:
-                        customClassNames?.eventMetaCustomClassNames?.eventMetaTimezoneSelect,
-                    }}
-                    event={event.data}
-                    isPending={event.isPending}
-                    isPlatform={isPlatform}
-                    isPrivateLink={!!hashedLink}
-                    locale={userLocale}
-                    timeZones={timeZones}
-                    roundRobinHideOrgAndTeam={roundRobinHideOrgAndTeam}
-                    hideEventTypeDetails={hideEventTypeDetails}>
-                    {eventMetaChildren}
-                  </EventMeta>
+                  <>
+                    <EventMeta
+                      selectedTimeslot={selectedTimeslot}
+                      classNames={{
+                        eventMetaContainer: customClassNames?.eventMetaCustomClassNames?.eventMetaContainer,
+                        eventMetaTitle: customClassNames?.eventMetaCustomClassNames?.eventMetaTitle,
+                        eventMetaTimezoneSelect:
+                          customClassNames?.eventMetaCustomClassNames?.eventMetaTimezoneSelect,
+                      }}
+                      event={event.data}
+                      isPending={event.isPending}
+                      isPlatform={isPlatform}
+                      isPrivateLink={!!hashedLink}
+                      locale={userLocale}
+                      timeZones={timeZones}
+                      roundRobinHideOrgAndTeam={roundRobinHideOrgAndTeam}
+                      hideEventTypeDetails={hideEventTypeDetails}>
+                      {eventMetaChildren}
+                    </EventMeta>
+                    {bookerState !== "booking" && (
+                      <div className="relative z-10 p-6">
+                        <div className="pb-2 font-semibold">Filter appointment times:</div>
+                        {[
+                          [12, 14],
+                          [14, 16],
+                          [16, 18],
+                        ].map(([minTime, maxTime]) => (
+                          <div key={minTime}>
+                            <CheckboxField
+                              description={`${((minTime - 1) % 12) + 1}:00 - ${((maxTime - 1) % 12) + 1}:00`}
+                              checked={isFilterActive(minTime, maxTime)}
+                              onChange={(e) => toggleFilter(minTime, maxTime, e.target.checked)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
                 {layout !== BookerLayouts.MONTH_VIEW &&
                   !(layout === "mobile" && bookerState === "booking") && (
@@ -478,7 +533,7 @@ const BookerComponent = ({
                       <DatePicker
                         classNames={customClassNames?.datePickerCustomClassNames}
                         event={event}
-                        slots={schedule?.data?.slots}
+                        slots={filteredSlots}
                         isLoading={schedule.isPending}
                         scrollToTimeSlots={scrollToTimeSlots}
                         showNoAvailabilityDialog={showNoAvailabilityDialog}
@@ -512,7 +567,7 @@ const BookerComponent = ({
               <DatePicker
                 classNames={customClassNames?.datePickerCustomClassNames}
                 event={event}
-                slots={schedule?.data?.slots}
+                slots={filteredSlots}
                 isLoading={schedule.isPending}
                 scrollToTimeSlots={scrollToTimeSlots}
                 showNoAvailabilityDialog={showNoAvailabilityDialog}
@@ -554,7 +609,7 @@ const BookerComponent = ({
                 customClassNames={customClassNames?.availableTimeSlotsCustomClassNames}
                 extraDays={extraDays}
                 limitHeight={layout === BookerLayouts.MONTH_VIEW}
-                schedule={schedule}
+                slots={filteredSlots}
                 isLoading={schedule.isPending}
                 seatsPerTimeSlot={event.data?.seatsPerTimeSlot}
                 unavailableTimeSlots={unavailableTimeSlots}
@@ -664,7 +719,7 @@ const BookerComponent = ({
             customClassNames={customClassNames?.availableTimeSlotsCustomClassNames}
             extraDays={extraDays}
             limitHeight={layout === BookerLayouts.MONTH_VIEW}
-            schedule={schedule}
+            slots={filteredSlots}
             isLoading={schedule.isPending}
             seatsPerTimeSlot={event.data?.seatsPerTimeSlot}
             unavailableTimeSlots={unavailableTimeSlots}

@@ -1,24 +1,13 @@
 import dayjs from "@calcom/dayjs";
-
+import type { Slots } from "bookings/types";
 import type { QuickAvailabilityCheck } from "../components/hooks/useSlots";
 import { isSlotEquivalent, isValidISOFormat } from "./isSlotEquivalent";
 
 type Maybe<T> = T | undefined;
 
-// Format is YYYY-MM-DD
-type DateInBookerTimeZone = string;
-
 // Format is YYYY-MM-DDTHH:mm:ssZ
 type SlotInIsoFormat = string;
 type SlotsInIso = { time: SlotInIsoFormat }[];
-type ScheduleData = {
-  /**
-   * `slots` is a map of date in Booker's timezone to an array of time slots in ISO format
-   * So, `DateInBookerTimeZone` could be on a different day number than the slot date in ISO format
-   * For example, if Booker's timezone is UTC+5:30, and timeslot is 2025-01-02T21:00:00Z, then `DateInBookerTimeZone` could be 2025-01-03 as it is 02:30 AM next day in IST
-   */
-  slots: Record<DateInBookerTimeZone, SlotsInIso>;
-};
 
 function _isSlotPresent(slotsInIsoForDate: Maybe<SlotsInIso>, slotToCheckInIso: SlotInIsoFormat) {
   if (!slotsInIsoForDate) return false;
@@ -29,11 +18,11 @@ function _isSlotPresent(slotsInIsoForDate: Maybe<SlotsInIso>, slotToCheckInIso: 
 }
 
 function _isSlotPresentInSchedule({
-  scheduleData,
+  slots,
   dateInGMT,
   slotToCheckInIso,
 }: {
-  scheduleData: ScheduleData;
+  slots: Slots;
   /**
    * It is just the date in format YYYY-MM-DD
    */
@@ -47,9 +36,9 @@ function _isSlotPresentInSchedule({
   const dateAfter = dayjs(dateInGMT).add(1, "day").format("YYYY-MM-DD");
 
   // No matter what timezone the booker is in, the slot has to be in one of these three dates
-  const slotsInIsoForDate = scheduleData.slots[dateInGMT] as Maybe<SlotsInIso>;
-  const slotsInIsoForDateBefore = scheduleData.slots[dateBefore] as Maybe<SlotsInIso>;
-  const slotsInIsoForDateAfter = scheduleData.slots[dateAfter] as Maybe<SlotsInIso>;
+  const slotsInIsoForDate = slots[dateInGMT] as Maybe<SlotsInIso>;
+  const slotsInIsoForDateBefore = slots[dateBefore] as Maybe<SlotsInIso>;
+  const slotsInIsoForDateAfter = slots[dateAfter] as Maybe<SlotsInIso>;
 
   const matchFoundOnDate = _isSlotPresent(slotsInIsoForDate, slotToCheckInIso);
   if (matchFoundOnDate) return true;
@@ -70,11 +59,11 @@ function _isSlotPresentInSchedule({
  * @returns boolean - true if the slot is available, false otherwise.
  */
 export const isTimeSlotAvailable = ({
-  scheduleData,
+  slots,
   slotToCheckInIso,
   quickAvailabilityChecks,
 }: {
-  scheduleData: ScheduleData | null;
+  slots: Slots | undefined;
   slotToCheckInIso: SlotInIsoFormat;
   quickAvailabilityChecks: QuickAvailabilityCheck[];
 }) => {
@@ -87,7 +76,7 @@ export const isTimeSlotAvailable = ({
   if (isUnavailableAsPerQuickCheck) return false;
 
   // If schedule is not loaded or other variables are unavailable consider the slot available
-  if (!scheduleData) {
+  if (!slots) {
     return true;
   }
 
@@ -97,7 +86,7 @@ export const isTimeSlotAvailable = ({
   if (!dateInGMT) return true;
 
   return _isSlotPresentInSchedule({
-    scheduleData,
+    slots,
     dateInGMT,
     slotToCheckInIso,
   });

@@ -1,37 +1,30 @@
-import { useCallback, useMemo, useRef } from "react";
-
 import dayjs from "@calcom/dayjs";
+import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
+import type { IUseBookingLoadingStates } from "@calcom/features/bookings/Booker/components/hooks/useBookings";
+import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import type { BookerEvent, Slots } from "@calcom/features/bookings/types";
+import type { Slot } from "@calcom/features/schedules/lib/use-schedule/types";
+import { useNonEmptyScheduleDays } from "@calcom/features/schedules/lib/use-schedule/useNonEmptyScheduleDays";
+import { useSlotsForAvailableDates } from "@calcom/features/schedules/lib/use-schedule/useSlotsForDate";
+import { localStorage } from "@calcom/lib/webstorage";
+import { BookerLayouts } from "@calcom/prisma/zod-utils";
+import classNames from "@calcom/ui/classNames";
 import {
   AvailableTimes,
   AvailableTimesSkeleton,
 } from "@calcom/web/modules/bookings/components/AvailableTimes";
-import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
-import type { IUseBookingLoadingStates } from "@calcom/features/bookings/Booker/components/hooks/useBookings";
-import type { BookerEvent } from "@calcom/features/bookings/types";
-import type { Slot } from "@calcom/features/schedules/lib/use-schedule/types";
-import { useNonEmptyScheduleDays } from "@calcom/features/schedules/lib/use-schedule/useNonEmptyScheduleDays";
-import { useSlotsForAvailableDates } from "@calcom/features/schedules/lib/use-schedule/useSlotsForDate";
-import { PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM } from "@calcom/lib/constants";
-import { localStorage } from "@calcom/lib/webstorage";
-import { BookerLayouts } from "@calcom/prisma/zod-utils";
-import classNames from "@calcom/ui/classNames";
-
 import { AvailableTimesHeader } from "@calcom/web/modules/bookings/components/AvailableTimesHeader";
-import type { useScheduleForEventReturnType } from "@calcom/features/bookings/Booker/utils/event";
-import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import { useCallback, useMemo, useRef } from "react";
 
 type AvailableTimeSlotsProps = {
   extraDays?: number;
   limitHeight?: boolean;
-  schedule?: useScheduleForEventReturnType;
+  slots?: Slots;
   isLoading: boolean;
   seatsPerTimeSlot?: number | null;
   showAvailableSeatsCount?: boolean | null;
   event: {
-    data?: Pick<
-      BookerEvent,
-      "length" | "bookingFields" | "price" | "currency" | "metadata"
-    > | null;
+    data?: Pick<BookerEvent, "length" | "bookingFields" | "price" | "currency" | "metadata"> | null;
   };
   customClassNames?: {
     availableTimeSlotsContainer?: string;
@@ -71,7 +64,7 @@ export const AvailableTimeSlots = ({
   extraDays,
   limitHeight,
   showAvailableSeatsCount,
-  schedule,
+  slots,
   isLoading,
   customClassNames,
   skipConfirmStep,
@@ -86,18 +79,15 @@ export const AvailableTimeSlots = ({
 }: AvailableTimeSlotsProps) => {
   const selectedDate = useBookerStoreContext((state) => state.selectedDate);
 
-  const setSeatedEventData = useBookerStoreContext(
-    (state) => state.setSeatedEventData
-  );
+  const setSeatedEventData = useBookerStoreContext((state) => state.setSeatedEventData);
   const date = selectedDate || dayjs().format("YYYY-MM-DD");
   const [layout] = useBookerStoreContext((state) => [state.layout]);
   const isColumnView = layout === BookerLayouts.COLUMN_VIEW;
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { setTentativeSelectedTimeslots, tentativeSelectedTimeslots } =
-    useBookerStoreContext((state) => ({
-      setTentativeSelectedTimeslots: state.setTentativeSelectedTimeslots,
-      tentativeSelectedTimeslots: state.tentativeSelectedTimeslots,
-    }));
+  const { setTentativeSelectedTimeslots } = useBookerStoreContext((state) => ({
+    setTentativeSelectedTimeslots: state.setTentativeSelectedTimeslots,
+    tentativeSelectedTimeslots: state.tentativeSelectedTimeslots,
+  }));
 
   const onTentativeTimeSelect = ({
     time,
@@ -118,9 +108,7 @@ export const AvailableTimeSlots = ({
     setTentativeSelectedTimeslots([time]);
   };
 
-  const scheduleData = schedule?.data;
-
-  const nonEmptyScheduleDays = useNonEmptyScheduleDays(scheduleData?.slots);
+  const nonEmptyScheduleDays = useNonEmptyScheduleDays(slots);
   const nonEmptyScheduleDaysFromSelectedDate = nonEmptyScheduleDays.filter(
     (slot) => dayjs(selectedDate).diff(slot, "day") <= 0
   );
@@ -135,27 +123,13 @@ export const AvailableTimeSlots = ({
     return [];
   }, [date, extraDays, nonEmptyScheduleDaysFromSelectedDate]);
 
-  const { slotsPerDay, toggleConfirmButton } = useSlotsForAvailableDates(
-    dates,
-    scheduleData?.slots
-  );
+  const { slotsPerDay, toggleConfirmButton } = useSlotsForAvailableDates(dates, slots);
 
   const overlayCalendarToggled =
-    getQueryParam("overlayCalendar") === "true" ||
-    localStorage.getItem("overlayCalendarSwitchDefault");
+    getQueryParam("overlayCalendar") === "true" || localStorage.getItem("overlayCalendarSwitchDefault");
 
   const onTimeSelect = useCallback(
-    (
-      time: string,
-      attendees: number,
-      seatsPerTimeSlot?: number | null,
-      bookingUid?: string
-    ) => {
-      // Temporarily allow disabling it, till we are sure that it doesn't cause any significant load on the system
-      if (PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM) {
-        // Ensures that user has latest available slots when they are about to confirm the booking by filling up the details
-        schedule?.invalidate();
-      }
+    (time: string, attendees: number, seatsPerTimeSlot?: number | null, bookingUid?: string) => {
       setTentativeSelectedTimeslots([]);
       // note(Lauris): setting setSeatedEventData before setSelectedTimeslot so that in useSlots we have seated event data available
       // and only then we invoke handleReserveSlot that is triggered by the changes in setSelectedTimeslot.
@@ -182,7 +156,6 @@ export const AvailableTimeSlots = ({
       skipConfirmStep,
       showAvailableSeatsCount,
       unavailableTimeSlots,
-      schedule,
       setTentativeSelectedTimeslots,
       onAvailableTimeSlotSelect,
     ]
@@ -201,13 +174,7 @@ export const AvailableTimeSlots = ({
         );
       }
     },
-    [
-      overlayCalendarToggled,
-      onTimeSelect,
-      seatsPerTimeSlot,
-      skipConfirmStep,
-      toggleConfirmButton,
-    ]
+    [overlayCalendarToggled, onTimeSelect, seatsPerTimeSlot, skipConfirmStep, toggleConfirmButton]
   );
 
   return (
@@ -217,8 +184,7 @@ export const AvailableTimeSlots = ({
           `flex`,
           hideAvailableTimesHeader && "hidden",
           `${customClassNames?.availableTimeSlotsContainer}`
-        )}
-      >
+        )}>
         {isLoading ? (
           <div className="mb-3 h-8" />
         ) : (
@@ -229,19 +195,15 @@ export const AvailableTimeSlots = ({
             return (
               <AvailableTimesHeader
                 customClassNames={{
-                  availableTimeSlotsHeaderContainer:
-                    customClassNames?.availableTimeSlotsHeaderContainer,
-                  availableTimeSlotsTitle:
-                    customClassNames?.availableTimeSlotsTitle,
-                  availableTimeSlotsTimeFormatToggle:
-                    customClassNames?.availableTimeSlotsTimeFormatToggle,
+                  availableTimeSlotsHeaderContainer: customClassNames?.availableTimeSlotsHeaderContainer,
+                  availableTimeSlotsTitle: customClassNames?.availableTimeSlotsTitle,
+                  availableTimeSlotsTimeFormatToggle: customClassNames?.availableTimeSlotsTimeFormatToggle,
                 }}
                 key={slots.date}
                 date={dayjs(slots.date)}
                 showTimeFormatToggle={!isColumnView && !isOOODay}
                 availableMonth={
-                  dayjs(selectedDate).format("MM") !==
-                  dayjs(slots.date).format("MM")
+                  dayjs(selectedDate).format("MM") !== dayjs(slots.date).format("MM")
                     ? dayjs(slots.date).format("MMM")
                     : undefined
                 }
@@ -257,19 +219,13 @@ export const AvailableTimeSlots = ({
           limitHeight && "no-scrollbar grow overflow-auto md:h-[400px]",
           !limitHeight && "flex h-full w-full flex-row gap-4",
           `${customClassNames?.availableTimeSlotsContainer}`
-        )}
-      >
+        )}>
         {isLoading && // Shows exact amount of days as skeleton.
-          Array.from({ length: 1 + (extraDays ?? 0) }).map((_, i) => (
-            <AvailableTimesSkeleton key={i} />
-          ))}
+          Array.from({ length: 1 + (extraDays ?? 0) }).map((_, i) => <AvailableTimesSkeleton key={i} />)}
         {!isLoading &&
           slotsPerDay.length > 0 &&
           slotsPerDay.map((slots) => (
-            <div
-              key={slots.date}
-              className="no-scrollbar overflow-x-hidden! h-full w-full overflow-y-auto"
-            >
+            <div key={slots.date} className="no-scrollbar overflow-x-hidden! h-full w-full overflow-y-auto">
               <AvailableTimes
                 className={customClassNames?.availableTimeSlotsContainer}
                 customClassNames={customClassNames?.availableTimes}
