@@ -29,6 +29,7 @@ import {
 } from "@calcom/lib/constants";
 import { useCompatSearchParams } from "@calcom/lib/hooks/useCompatSearchParams";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
+import { trpc } from "@calcom/trpc/react";
 import classNames from "@calcom/ui/classNames";
 import { DialogContent } from "@calcom/ui/components/dialog";
 import { CheckboxField } from "@calcom/ui/components/form";
@@ -131,6 +132,40 @@ const BookerComponent = ({
     (state) => [state.dayCount, state.setDayCount],
     shallow
   );
+
+  const { data: eventTypeData, isPending: isEventTypePending } = trpc.viewer.eventTypes.get.useQuery(
+    { id: event.data?.id },
+    {
+      enabled: !!event.data,
+    }
+  );
+  const { data: scheduleQueryData } = trpc.viewer.availability.schedule.get.useQuery(
+    {
+      scheduleId: eventTypeData?.eventType.schedule,
+      isManagedEventType: false,
+    },
+    { enabled: !isEventTypePending && !!eventTypeData?.eventType.schedule }
+  );
+
+  const availableFilters = React.useMemo(() => {
+    if (!scheduleQueryData) {
+      return [];
+    }
+    const availability: { start: Date; end: Date }[][] = scheduleQueryData.availability;
+    // biome-ignore lint/complexity/noFlatMapIdentity: <you suck and are wrong>
+    const allAvailabilities = Array.from(availability.values().flatMap((a) => a));
+    const minHour = allAvailabilities.reduce((prev, next) => (prev.start < next.start ? prev : next));
+    const maxHour = allAvailabilities.reduce((prev, next) => (prev.end > next.end ? prev : next));
+    const firstTime = minHour.start.getUTCHours();
+    const lastTime =
+      maxHour.end.getUTCHours() +
+      (maxHour.end.getUTCMinutes() ? 1 : 0) -
+      Math.floor(eventTypeData?.eventType.length / 60);
+    const numFilters = Math.ceil((lastTime - firstTime) / 2);
+    return Array.from({ length: numFilters }, (_, i) =>
+      i < numFilters - 1 ? [firstTime + 2 * i, firstTime + 2 * i + 2] : [lastTime - 2, lastTime]
+    );
+  }, [eventTypeData?.eventType.length, scheduleQueryData]);
 
   const [filters, setFilters] = React.useState<{ [key: string]: string[] | [] }>({});
 
@@ -507,14 +542,10 @@ const BookerComponent = ({
                       hideEventTypeDetails={hideEventTypeDetails}>
                       {eventMetaChildren}
                     </EventMeta>
-                    {bookerState !== "booking" && (
+                    {bookerState !== "booking" && availableFilters.length > 0 && (
                       <div className="relative z-10 p-6">
                         <div className="pb-2 font-semibold">Filter appointment times:</div>
-                        {[
-                          [12, 14],
-                          [14, 16],
-                          [16, 18],
-                        ].map(([minTime, maxTime]) => (
+                        {availableFilters.map(([minTime, maxTime]) => (
                           <div key={minTime}>
                             <CheckboxField
                               description={`${((minTime - 1) % 12) + 1}:00 - ${((maxTime - 1) % 12) + 1}:00`}
