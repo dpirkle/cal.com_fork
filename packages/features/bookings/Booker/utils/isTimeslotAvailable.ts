@@ -1,5 +1,5 @@
 import dayjs from "@calcom/dayjs";
-import type { Slots } from "bookings/types";
+import type { Slots } from "@calcom/features/calendars/lib/types";
 import type { QuickAvailabilityCheck } from "../components/hooks/useSlots";
 import { isSlotEquivalent, isValidISOFormat } from "./isSlotEquivalent";
 
