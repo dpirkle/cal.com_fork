@@ -134,14 +134,14 @@ const BookerComponent = ({
   );
 
   const { data: eventTypeData, isPending: isEventTypePending } = trpc.viewer.eventTypes.get.useQuery(
-    { id: event.data?.id },
+    { id: event.data?.id ?? 0 },
     {
       enabled: !!event.data,
     }
   );
   const { data: scheduleQueryData } = trpc.viewer.availability.schedule.get.useQuery(
     {
-      scheduleId: eventTypeData?.eventType.schedule,
+      scheduleId: eventTypeData?.eventType.schedule ?? 0,
       isManagedEventType: false,
     },
     { enabled: !isEventTypePending && !!eventTypeData?.eventType.schedule }
@@ -160,7 +160,7 @@ const BookerComponent = ({
     const lastTime =
       maxHour.end.getUTCHours() +
       (maxHour.end.getUTCMinutes() ? 1 : 0) -
-      Math.floor(eventTypeData?.eventType.length / 60);
+      Math.floor((eventTypeData?.eventType.length ?? 0) / 60);
     const numFilters = Math.ceil((lastTime - firstTime) / 2);
     return Array.from({ length: numFilters }, (_, i) =>
       i < numFilters - 1 ? [firstTime + 2 * i, firstTime + 2 * i + 2] : [lastTime - 2, lastTime]

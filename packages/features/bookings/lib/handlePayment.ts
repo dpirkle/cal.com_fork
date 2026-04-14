@@ -41,6 +41,7 @@ const handlePayment = async ({
     userId: number | null;
     startTime: { toISOString: () => string };
     uid: string;
+    attendees: object[];
   };
   bookerName: string;
   bookerEmail: string;
