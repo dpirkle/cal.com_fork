@@ -1,6 +1,5 @@
-import { z } from "zod";
-
 import { eventTypeAppCardZod } from "@calcom/app-store/eventTypeAppCardZod";
+import { z } from "zod";
 
 const paymentOptionSchema = z.object({
   label: z.string(),
@@ -30,6 +29,7 @@ export const appDataSchema = eventTypeAppCardZod.merge(
     currency: z.string(),
     paymentOption: z.string().optional(),
     enabled: z.boolean().optional(),
+    isPricePerPerson: z.boolean().optional(),
   })
 );
 export const appKeysSchema = z.object({});

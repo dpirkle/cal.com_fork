@@ -11,13 +11,13 @@ const AlbyPriceComponent = dynamic(
   }
 );
 
-export const Price = ({ price, currency, displayAlternateSymbol = true }: EventPrice) => {
+export const Price = ({ price, currency, displayAlternateSymbol = true, isPricePerPerson = false }: EventPrice) => {
   if (price === 0) return null;
 
   const formattedPrice = formatPrice(price, currency);
 
   return currency !== "BTC" ? (
-    <>{formattedPrice}</>
+    <>{formattedPrice}{isPricePerPerson ? " per person" : ""}</>
   ) : (
     <AlbyPriceComponent
       displaySymbol={displayAlternateSymbol}

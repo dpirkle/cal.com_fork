@@ -191,6 +191,7 @@ export const EventDetails = ({ event, blocks = defaultEventDetailsBlocks }: Even
                   price={paymentAppData.price}
                   currency={event.currency}
                   displayAlternateSymbol={false}
+                  isPricePerPerson={paymentAppData.isPricePerPerson ?? false}
                 />
               </EventMetaBlock>
             );

@@ -4,11 +4,13 @@ import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-util
 import type { Fields } from "@calcom/features/bookings/lib/getBookingFields";
 import { fieldTypesConfigMap } from "@calcom/features/form-builder/fieldTypes";
 import { convertToSmallestCurrencyUnit } from "@calcom/lib/currencyConversions";
-import type { AppCategories, Prisma, EventType } from "@calcom/prisma/client";
+import type { AppCategories, EventType, Prisma } from "@calcom/prisma/client";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
 
-const isPaymentService = (x: unknown): x is { BuildPaymentService: (credentials: { key: unknown }) => unknown } =>
+const isPaymentService = (
+  x: unknown
+): x is { BuildPaymentService: (credentials: { key: unknown }) => unknown } =>
   !!x && typeof x === "object" && "BuildPaymentService" in x && typeof x.BuildPaymentService === "function";
 
 const handlePayment = async ({
@@ -72,6 +74,7 @@ const handlePayment = async ({
   const currency = paymentCurrency || "USD";
 
   let totalAmount = apps?.[paymentAppCredentials.appId].price || 0;
+  const isPricePerPerson = apps?.[paymentAppCredentials.appId].isPricePerPerson ?? false;
 
   if ((bookingFields || [])?.length > 0) {
     let addonsPrice = 0;
@@ -141,8 +144,8 @@ const handlePayment = async ({
           const selectedValues = Array.isArray(responseValue)
             ? responseValue
             : responseValue
-            ? [responseValue]
-            : [];
+              ? [responseValue]
+              : [];
 
           selectedValues.forEach((value) => {
             const option = typedInput.options?.find((opt) => opt.value === value);
@@ -154,6 +157,10 @@ const handlePayment = async ({
     });
 
     totalAmount += convertToSmallestCurrencyUnit(addonsPrice, currency);
+  }
+
+  if (isPricePerPerson) {
+    totalAmount = totalAmount * booking.attendees.length;
   }
 
   const paymentPriceAndCurrency = {

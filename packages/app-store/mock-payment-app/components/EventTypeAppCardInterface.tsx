@@ -1,8 +1,5 @@
-import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useMemo } from "react";
-
-import { useAppContextWithSchema } from "@calcom/app-store/EventTypeAppContext";
 import AppCard from "@calcom/app-store/_components/AppCard";
+import { useAppContextWithSchema } from "@calcom/app-store/EventTypeAppContext";
 import {
   currencyOptions,
   currencySymbols,
@@ -11,16 +8,20 @@ import {
 import type { EventTypeAppCardComponent } from "@calcom/app-store/types";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Select } from "@calcom/ui/components/form";
-import { TextField } from "@calcom/ui/components/form";
 import { Alert } from "@calcom/ui/components/alert";
-
+import { Checkbox, Select, TextField } from "@calcom/ui/components/form";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import type { appDataSchema } from "../zod";
 import { paymentOptions } from "../zod";
 
 type Option = { value: string; label: string };
 
-const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ app, eventType, onAppInstallSuccess }) {
+const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({
+  app,
+  eventType,
+  onAppInstallSuccess,
+}) {
   const searchParams = useSearchParams();
   /** TODO "pathname" no longer contains square-bracket expressions. Rewrite the code relying on them if required. **/
   const pathname = usePathname();
@@ -34,6 +35,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
   const currency = getAppData("currency");
   const paymentOption = getAppData("paymentOption");
   const enable = getAppData("enabled");
+  const isPricePerPerson = getAppData("isPricePerPerson");
 
   const [selectedCurrency, setSelectedCurrency] = useState(currencyOptions.find((c) => c.value === currency));
   const [currencySymbol, setCurrencySymbol] = useState(
@@ -86,6 +88,13 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
                   }}
                   value={price > 0 ? price / 100 : undefined}
                 />
+              </div>
+              <div className="mt-5 flex items-center gap-2">
+                <Checkbox
+                  checked={isPricePerPerson}
+                  onCheckedChange={(checked: boolean) => setAppData("isPricePerPerson", checked)}
+                />
+                <span className="text-sm">Price is per person</span>
               </div>
               <div className="mt-5 w-60">
                 <label className="text-default mb-1 block text-sm font-medium" htmlFor="currency">
