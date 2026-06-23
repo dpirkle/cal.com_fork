@@ -80,9 +80,7 @@ export const buildGoogleCalendarLink = ({
   const location = bookingLocation ? encodeURIComponent(bookingLocation) : "";
   const description = encodeURIComponent(eventDescription ?? "");
 
-  const googleCalendarLink = `https://calendar.google.com/calendar/r/eventedit?dates=${startTimeInUtcFormat}/${endTimeInUtcFormat}&text=${eventName}&details=${description}${
-    location ? `&location=${location}` : ""
-  }${recurrence ? `&recur=${recurrence}` : ""}`;
+  const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${startTimeInUtcFormat}/${endTimeInUtcFormat}&text=${eventName}${description ? `&details=${description}` : ""}${location ? `&location=${location}` : ""}${recurrence ? `&recur=${recurrence}` : ""}`;
 
   return googleCalendarLink;
 };
@@ -100,13 +98,13 @@ const buildMicrosoftOfficeLink = ({
   eventDescription: string | null;
   bookingLocation: string | null;
 }) => {
-  const startTimeInUtcFormat = startTime.utc().format();
-  const endTimeInUtcFormat = endTime.utc().format();
+  const startTimeInUtcFormat = startTime.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
+  const endTimeInUtcFormat = endTime.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
   const location = bookingLocation ? encodeURIComponent(bookingLocation) : "";
   const description = encodeURIComponent(eventDescription ?? "");
 
   // TODO: Why do we need to encode URI this href but not the google calendar link?
-  const microsoftOfficeLink = `https://outlook.office.com/calendar/0/deeplink/compose?body=${description}&enddt=${endTimeInUtcFormat}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${startTimeInUtcFormat}&subject=${eventName}${
+  const microsoftOfficeLink = `https://outlook.office.com/calendar/0/deeplink/compose?${description ? `body=${description}&` : ""}enddt=${endTimeInUtcFormat}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${startTimeInUtcFormat}&subject=${eventName}${
     location ? `&location=${location}` : ""
   }`;
   return microsoftOfficeLink;
@@ -125,12 +123,12 @@ export const buildMicrosoftOutlookLink = ({
   eventDescription: string | null;
   bookingLocation: string | null;
 }) => {
-  const startTimeInUtcFormat = startTime.utc().format();
-  const endTimeInUtcFormat = endTime.utc().format();
+  const startTimeInUtcFormat = startTime.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
+  const endTimeInUtcFormat = endTime.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
   const location = bookingLocation ? encodeURIComponent(bookingLocation) : "";
   const microsoftOutlookLink =
     encodeURI(
-      `https://outlook.live.com/calendar/0/deeplink/compose?body=${eventDescription}&enddt=${endTimeInUtcFormat}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${startTimeInUtcFormat}&subject=${eventName}`
+      `https://outlook.live.com/calendar/0/deeplink/compose?${eventDescription ? `body=${eventDescription}&` : ""}enddt=${endTimeInUtcFormat}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${startTimeInUtcFormat}&subject=${eventName}`
     ) + (location ? `&location=${location}` : "");
   return microsoftOutlookLink;
 };
