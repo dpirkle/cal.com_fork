@@ -4,8 +4,10 @@ import {
   buildGoogleCalendarLink,
   buildMicrosoftOutlookLink,
 } from "@calcom/features/bookings/lib/getCalendarLinks";
+import { EventTypeRepository } from "@calcom/features/eventtypes/repositories/eventTypeRepository";
 import { markdownToSafeHTML } from "@calcom/lib/markdownToSafeHTML";
 import { TimeFormat } from "@calcom/lib/timeFormat";
+import { prisma } from "@calcom/prisma";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 import Bottleneck from "bottleneck";
 import { default as cloneDeep } from "lodash/cloneDeep";
@@ -143,6 +145,11 @@ async function sendEmailWithResendTemplate(from: string, to: string, plainTo: st
   const calEvent = (email as EmailWithEvent).calEvent;
   if (calEvent === undefined) {
     return "internal error, calEvent missing";
+  }
+  if (!calEvent.description && calEvent.eventTypeId) {
+    const eventTypeRepo = new EventTypeRepository(prisma);
+    const eventType = await eventTypeRepo.findByIdMinimal({ id: calEvent.eventTypeId });
+    calEvent.description = eventType?.description || calEvent.description;
   }
   const isAttendee = plainTo !== calEvent.organizer.email;
   const id = idFrom(email, plainTo, isAttendee, calEvent);
