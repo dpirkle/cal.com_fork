@@ -24932,10 +24932,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-fs-backend@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "i18next-fs-backend@npm:2.6.0"
-  checksum: 10/e23b6337326bea870c9e0a3e004241a27dcc56ac803946b859992bc2030e5f8d41cb10fbf3b74424155055387587f8d308b60118e07f75104198865f329013a9
+"i18next-fs-backend@npm:^2.6.6":
+  version: 2.6.7
+  resolution: "i18next-fs-backend@npm:2.6.7"
+  checksum: 10/9d449c880f2e617cbb1534b2478210ded4e501557c9cee81d44c150bfc0a41470e68fd7539c82f71cd313dd17071bdd34165f14853bcce0b643d0d233bc4a509
   languageName: node
   linkType: hard
 
