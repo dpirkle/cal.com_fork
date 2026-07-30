@@ -63,6 +63,7 @@ export interface ISyncFormData {
   id: string;
   name: string;
   credentialId?: number;
+  integration?: AttributeSyncIntegrations;
   enabled: boolean;
   organizationId: number;
   ruleId: string;
@@ -154,7 +155,7 @@ export interface IIntegrationAttributeSyncUpdateParams {
   integrationAttributeSync: Omit<
     IntegrationAttributeSync,
     "attributeSyncRule" | "syncFieldMappings" | "integration"
-  >;
+  > & { integration?: AttributeSyncIntegrations };
   attributeSyncRule: AttributeSyncRule;
   fieldMappingsToCreate: Omit<AttributeSyncFieldMapping, "id">[];
   fieldMappingsToUpdate: AttributeSyncFieldMapping[];

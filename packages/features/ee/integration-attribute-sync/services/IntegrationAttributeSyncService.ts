@@ -256,4 +256,11 @@ export class IntegrationAttributeSyncService {
       credentialId
     );
   }
+
+  async validateCredentialBelongsToOrg(credentialId: number, organizationId: number) {
+    return this.deps.credentialRepository.findByIdAndTeamId({
+      id: credentialId,
+      teamId: organizationId,
+    });
+  }
 }
