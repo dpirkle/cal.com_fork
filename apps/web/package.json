@@ -55,7 +55,7 @@
     "@formkit/auto-animate": "1.0.0-beta.5",
     "@glidejs/glide": "3.5.2",
     "@googleapis/admin": "23.5.0",
-    "@googleapis/calendar": "9.7.9",
+    "@googleapis/calendar": "15.0.0",
     "@googleapis/oauth2": "1.0.7",
     "@hookform/error-message": "2.0.0",
     "@hookform/resolvers": "2.9.7",

@@ -2687,7 +2687,7 @@ __metadata:
   dependencies:
     "@calcom/prisma": "workspace:*"
     "@calcom/types": "workspace:*"
-    "@googleapis/calendar": "npm:9.7.9"
+    "@googleapis/calendar": "npm:15.0.0"
   languageName: unknown
   linkType: soft
 
@@ -3519,7 +3519,7 @@ __metadata:
     "@formkit/auto-animate": "npm:1.0.0-beta.5"
     "@glidejs/glide": "npm:3.5.2"
     "@googleapis/admin": "npm:23.5.0"
-    "@googleapis/calendar": "npm:9.7.9"
+    "@googleapis/calendar": "npm:15.0.0"
     "@googleapis/oauth2": "npm:1.0.7"
     "@hookform/error-message": "npm:2.0.0"
     "@hookform/resolvers": "npm:2.9.7"
@@ -5165,12 +5165,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@googleapis/calendar@npm:9.7.9":
-  version: 9.7.9
-  resolution: "@googleapis/calendar@npm:9.7.9"
+"@googleapis/calendar@npm:15.0.0":
+  version: 15.0.0
+  resolution: "@googleapis/calendar@npm:15.0.0"
   dependencies:
-    googleapis-common: "npm:^7.0.0"
-  checksum: 10/28c54e1ad55b2fc19e4b3ce285488606afe69b9d899d64b50d569d7cadceffea241d3d1b46662934793e759a0dec96794d40d4f9ab320889192e201bf1901642
+    googleapis-common: "npm:^8.0.0"
+  checksum: 10/c3b72e26d1b3a33dc4d98e28bd87d16351c0606c37de918b97e3418289797b0ad2652f65233658c6d2f43e345d9315da959146d2be82e2197a8dbf8a2cac7070
   languageName: node
   linkType: hard
 
@@ -23594,6 +23594,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gaxios@npm:7.1.3":
+  version: 7.1.3
+  resolution: "gaxios@npm:7.1.3"
+  dependencies:
+    extend: "npm:^3.0.2"
+    https-proxy-agent: "npm:^7.0.1"
+    node-fetch: "npm:^3.3.2"
+    rimraf: "npm:^5.0.1"
+  checksum: 10/234ae4d622c41472a0f1be252a9a0f0a6f4f6ae2418671ef83fd715b9e315100c621818d721fdf0e7471ef49a460f196eaf318c2b36ed5f51a1cf0f6a2639111
+  languageName: node
+  linkType: hard
+
 "gaxios@npm:^4.0.0":
   version: 4.3.3
   resolution: "gaxios@npm:4.3.3"
@@ -23619,6 +23631,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gaxios@npm:^7.0.0":
+  version: 7.3.0
+  resolution: "gaxios@npm:7.3.0"
+  dependencies:
+    extend: "npm:^3.0.2"
+    https-proxy-agent: "npm:^7.0.1"
+    node-fetch: "npm:^3.3.2"
+  checksum: 10/978112182a0011486948cd39952a723df2681fedd49b40e9a5a1bfd0cb57f76151396e8f25e08c598dcd1aa94efaf7fddca1a093d448a9d06d0d336baeb20227
+  languageName: node
+  linkType: hard
+
 "gcp-metadata@npm:^4.2.0":
   version: 4.3.1
   resolution: "gcp-metadata@npm:4.3.1"
@@ -23636,6 +23659,17 @@ __metadata:
     gaxios: "npm:^6.0.0"
     json-bigint: "npm:^1.0.0"
   checksum: 10/a0d12a9cb7499fdb9de0fff5406aa220310c1326b80056be8d9b747aae26414f99d14bd795c0ec52ef7d0473eef9d61bb657b8cd3d8186c8a84c4ddbff025fe9
+  languageName: node
+  linkType: hard
+
+"gcp-metadata@npm:^8.0.0":
+  version: 8.1.4
+  resolution: "gcp-metadata@npm:8.1.4"
+  dependencies:
+    gaxios: "npm:7.1.3"
+    google-logging-utils: "npm:1.1.3"
+    json-bigint: "npm:^1.0.0"
+  checksum: 10/3c9a6653fb06154df37ad37fa51807c398603490d04f2bb2c925b021d57308f31e3f05f2d37786985c62b3b000687283223614814f58f956da3cb5a72630892b
   languageName: node
   linkType: hard
 
@@ -23946,7 +23980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.5.0":
+"glob@npm:^10.3.7, glob@npm:^10.5.0":
   version: 10.5.0
   resolution: "glob@npm:10.5.0"
   dependencies:
@@ -24035,6 +24069,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"google-auth-library@npm:10.5.0":
+  version: 10.5.0
+  resolution: "google-auth-library@npm:10.5.0"
+  dependencies:
+    base64-js: "npm:^1.3.0"
+    ecdsa-sig-formatter: "npm:^1.0.11"
+    gaxios: "npm:^7.0.0"
+    gcp-metadata: "npm:^8.0.0"
+    google-logging-utils: "npm:^1.0.0"
+    gtoken: "npm:^8.0.0"
+    jws: "npm:^4.0.0"
+  checksum: 10/f9cec00f17f1082bc2e1e342043425063e347a06c4b4ae40c5d644f4491755b18690cb7f50daa9aa056539b14f993febdc009b0dada0c9b5bcf35c7e0caf78a3
+  languageName: node
+  linkType: hard
+
 "google-auth-library@npm:9.15.0, google-auth-library@npm:^9.0.0":
   version: 9.15.0
   resolution: "google-auth-library@npm:9.15.0"
@@ -24063,6 +24112,20 @@ __metadata:
     jws: "npm:^4.0.0"
     lru-cache: "npm:^6.0.0"
   checksum: 10/36e99d1376b4b447e4b174259a1902f4c9819a305f8737d4e94e2ac0bd6036a816473907c5518999d0ca86a325751ab589053a57d740743bae8330413f42a2ac
+  languageName: node
+  linkType: hard
+
+"google-logging-utils@npm:1.1.3":
+  version: 1.1.3
+  resolution: "google-logging-utils@npm:1.1.3"
+  checksum: 10/5a6c090399545e0f1f2c92fbda316479dc5d573b2f4b54f0deb570dc31d8b254537894fd4e7c275ce7d352482e40d5857fa4b960c1b3d869584b5216dc2076e2
+  languageName: node
+  linkType: hard
+
+"google-logging-utils@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "google-logging-utils@npm:1.2.0"
+  checksum: 10/68d0dd8295088a53d62aa53aa45a32fa00fb5a31bbe7d51c1bb311e2dee9dc007b67b87723a0a01bc6653b4f431d688b0f6f5b2164a38d86e8f5cbf9fa5dc949
   languageName: node
   linkType: hard
 
@@ -24102,6 +24165,20 @@ __metadata:
     url-template: "npm:^2.0.8"
     uuid: "npm:^9.0.0"
   checksum: 10/ae44d20c81183d72bf3ce85bfca3915b5370310ce5387b7b8c5b3e9348b1eb14c5f2b8e187aa6d088cd7a64153b3f7b797e0e2ee2894068f0c295287edeaafe3
+  languageName: node
+  linkType: hard
+
+"googleapis-common@npm:^8.0.0":
+  version: 8.0.3
+  resolution: "googleapis-common@npm:8.0.3"
+  dependencies:
+    extend: "npm:^3.0.2"
+    gaxios: "npm:7.1.3"
+    google-auth-library: "npm:10.5.0"
+    google-logging-utils: "npm:1.1.3"
+    qs: "npm:^6.7.0"
+    url-template: "npm:^2.0.8"
+  checksum: 10/5fa2c44b5451076b04f3a962cd611e6f7cd2f351c158483c36843f32838a6c09495a357f31bfefb3570d02369d3421f131b0811a344de30e8f0160a98ae42711
   languageName: node
   linkType: hard
 
@@ -24287,6 +24364,16 @@ __metadata:
     gaxios: "npm:^6.0.0"
     jws: "npm:^4.0.0"
   checksum: 10/0400ba81af8d2a5b630fd1fd4d748999b4091ee4c5ee52991826e72cd33e5d5373d4e29218c8cad18c81bea75966087415d5ba222165864e8a89d2d130802e71
+  languageName: node
+  linkType: hard
+
+"gtoken@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "gtoken@npm:8.0.0"
+  dependencies:
+    gaxios: "npm:^7.0.0"
+    jws: "npm:^4.0.0"
+  checksum: 10/b921430395dcd06ee63c3fc5a5e339ca4d6dcb38b6d618beb0f260bae1088d53d130f86029a9d578f1601c64685f49a65dba57bbd617c4b14039180b67b6c5ce
   languageName: node
   linkType: hard
 
@@ -34759,6 +34846,17 @@ __metadata:
   bin:
     rimraf: bin.js
   checksum: 10/063ffaccaaaca2cfd0ef3beafb12d6a03dd7ff1260d752d62a6077b5dfff6ae81bea571f655bb6b589d366930ec1bdd285d40d560c0dae9b12f125e54eb743d5
+  languageName: node
+  linkType: hard
+
+"rimraf@npm:^5.0.1":
+  version: 5.0.10
+  resolution: "rimraf@npm:5.0.10"
+  dependencies:
+    glob: "npm:^10.3.7"
+  bin:
+    rimraf: dist/esm/bin.mjs
+  checksum: 10/f3b8ce81eecbde4628b07bdf9e2fa8b684e0caea4999acb1e3b0402c695cd41f28cd075609a808e61ce2672f528ca079f675ab1d8e8d5f86d56643a03e0b8d2e
   languageName: node
   linkType: hard
 
