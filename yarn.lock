@@ -2619,7 +2619,7 @@ __metadata:
     p-limit: "npm:6.2.0"
     react-awesome-query-builder: "npm:5.1.2"
     react-select: "npm:5.8.0"
-    react-sticky-box: "npm:2.0.4"
+    react-sticky-box: "npm:2.0.5"
     recharts: "npm:3.0.2"
     stripe: "npm:9.16.0"
     stripe-event-types: "npm:3.1.0"
@@ -33952,12 +33952,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-sticky-box@npm:2.0.4":
-  version: 2.0.4
-  resolution: "react-sticky-box@npm:2.0.4"
+"react-sticky-box@npm:2.0.5":
+  version: 2.0.5
+  resolution: "react-sticky-box@npm:2.0.5"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 10/ac468a31d39db8a0b76210850b291a804c7f050eb38cb3cee160b07e5cb86d341d80763d9acda6a98d31fd2b58b44d21e3c1dc2851d0fb313df9c6ca71583cda
+  checksum: 10/bbea1e125973dc76b8fb8888583cabd81c16647f9acae74ce8d07642629dfd49ba1df1bbacb095db8d735feb5e73663ae478074f1ddfe6097c106c2eab5bf406
   languageName: node
   linkType: hard
 
