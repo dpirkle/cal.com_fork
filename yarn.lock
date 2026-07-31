@@ -1990,7 +1990,7 @@ __metadata:
     ioredis: "npm:5.3.2"
     jest: "npm:29.7.0"
     jest-date-mock: "npm:1.0.10"
-    jest-junit: "npm:^16.0.0"
+    jest-junit: "npm:^17.0.0"
     lodash: "npm:4.17.23"
     luxon: "npm:3.4.4"
     nest-winston: "npm:1.9.4"
@@ -26477,15 +26477,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-junit@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "jest-junit@npm:16.0.0"
+"jest-junit@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "jest-junit@npm:17.0.0"
   dependencies:
     mkdirp: "npm:^1.0.4"
     strip-ansi: "npm:^6.0.1"
-    uuid: "npm:^8.3.2"
+    uuid: "npm:^14.0.0"
     xml: "npm:^1.0.1"
-  checksum: 10/2c33ee8bfd0c83b9aa1f8ba5905084890d5f519d294ccc2829d778ac860d5adffffec75d930f44f1d498aa8370c783e0aa6a632d947fb7e81205f0e7b926669d
+  checksum: 10/707e96d591c310c9bdbbb8713a43ca57a87b6d226c856b1336ed6f4874a1921116130b7fcf41d99c234208305b2161976c03a95f4459c1e35ca2b0bdb489cd5d
   languageName: node
   linkType: hard
 
@@ -39103,6 +39103,15 @@ __metadata:
   bin:
     uuid: dist/esm/bin/uuid
   checksum: 10/16411d3dc12a08d6691616c09a75e66a7f900ba1beef6628a76fe0602f82fae2ee537b564d0b7bc95c24f58d059ca9b58c75a1e806118efb50e17822ff00ddd2
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^14.0.0":
+  version: 14.0.1
+  resolution: "uuid@npm:14.0.1"
+  bin:
+    uuid: dist-node/bin/uuid
+  checksum: 10/0f978fd5b0269d7acb615342aeb131f0b8d85eeb8ec34f2915d906baa3befcc14a079a430d0f8116aec6fd20c850cbfab65d1b3d1643fa81ed373c0cf9574f18
   languageName: node
   linkType: hard
 
