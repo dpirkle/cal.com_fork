@@ -2057,7 +2057,7 @@ __metadata:
     chokidar: "npm:3.6.0"
     ink: "npm:3.2.0"
     ink-select-input: "npm:4.2.1"
-    ink-text-input: "npm:4.0.3"
+    ink-text-input: "npm:6.0.0"
     meow: "npm:9.0.0"
     react: "npm:18.2.0"
     ts-node: "npm:10.9.2"
@@ -25130,16 +25130,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink-text-input@npm:4.0.3":
-  version: 4.0.3
-  resolution: "ink-text-input@npm:4.0.3"
+"ink-text-input@npm:6.0.0":
+  version: 6.0.0
+  resolution: "ink-text-input@npm:6.0.0"
   dependencies:
-    chalk: "npm:^4.1.0"
-    type-fest: "npm:^0.15.1"
+    chalk: "npm:^5.3.0"
+    type-fest: "npm:^4.18.2"
   peerDependencies:
-    ink: ^3.0.0-3
-    react: ^16.5.2 || ^17.0.0
-  checksum: 10/214db7e7d0b1fb27b1a03ce21e373f71098e6fb87055782e4484fd0318c663b6d80c29a2d878622340e39dce99d66069ff3d6f9ad360cf3794511204089ea0d5
+    ink: ">=5"
+    react: ">=18"
+  checksum: 10/dc2511df2bf6a93a7ee94efce03eb7fb99028d378bd5446047fa9f4c13de67e8651e9fc89331cc3d158ca84974dfdd2df465a52e241a070cdc3f85048a707931
   languageName: node
   linkType: hard
 
@@ -38244,13 +38244,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^0.15.1":
-  version: 0.15.1
-  resolution: "type-fest@npm:0.15.1"
-  checksum: 10/0468c369e3cb6054c59db7eb5846ee9a81d46185d0ddbbb3f6a6122e88508dee4e3a3fd3d74b062d7be6b6ed1f49084f94b605cea395f2fa16dfc4649aec20a6
-  languageName: node
-  linkType: hard
-
 "type-fest@npm:^0.18.0":
   version: 0.18.1
   resolution: "type-fest@npm:0.18.1"
@@ -38290,6 +38283,13 @@ __metadata:
   version: 0.8.1
   resolution: "type-fest@npm:0.8.1"
   checksum: 10/fd4a91bfb706aeeb0d326ebd2e9a8ea5263979e5dec8d16c3e469a5bd3a946e014a062ef76c02e3086d3d1c7209a56a20a4caafd0e9f9a5c2ab975084ea3d388
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.18.2":
+  version: 4.41.0
+  resolution: "type-fest@npm:4.41.0"
+  checksum: 10/617ace794ac0893c2986912d28b3065ad1afb484cad59297835a0807dc63286c39e8675d65f7de08fafa339afcb8fe06a36e9a188b9857756ae1e92ee8bda212
   languageName: node
   linkType: hard
 
