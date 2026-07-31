@@ -288,19 +288,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/swagger-parser@npm:10.0.2":
-  version: 10.0.2
-  resolution: "@apidevtools/swagger-parser@npm:10.0.2"
+"@apidevtools/swagger-parser@npm:10.0.3":
+  version: 10.0.3
+  resolution: "@apidevtools/swagger-parser@npm:10.0.3"
   dependencies:
     "@apidevtools/json-schema-ref-parser": "npm:^9.0.6"
     "@apidevtools/openapi-schemas": "npm:^2.0.4"
     "@apidevtools/swagger-methods": "npm:^3.0.2"
     "@jsdevtools/ono": "npm:^7.1.3"
     call-me-maybe: "npm:^1.0.1"
-    z-schema: "npm:^4.2.3"
+    z-schema: "npm:^5.0.1"
   peerDependencies:
     openapi-types: ">=7"
-  checksum: 10/0913a6676b638f03f72bdfed6f4c7347d88e67a505620195324db2e6355e346464589a851ed22ede85ae09d7831bf8001d7d13a09df8fc09957bcfde027e59bb
+  checksum: 10/26d5b11a0f20d19309c6f6cee2bb04e8c41e038d15b656d8bcf7d7291902204807e246d1e5f124ade5322fb999a79e7c7aa8fc1c6cd4cc0ab83bfefd922ddacd
   languageName: node
   linkType: hard
 
@@ -2037,7 +2037,7 @@ __metadata:
     next: "npm:16.1.0"
     next-api-middleware: "npm:1.0.1"
     next-axiom: "npm:0.17.0"
-    next-swagger-doc: "npm:0.3.6"
+    next-swagger-doc: "npm:0.4.1"
     next-validations: "npm:0.2.1"
     node-mocks-http: "npm:1.16.2"
     typescript: "npm:5.9.3"
@@ -16546,6 +16546,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/swagger-jsdoc@npm:6.0.4":
+  version: 6.0.4
+  resolution: "@types/swagger-jsdoc@npm:6.0.4"
+  checksum: 10/736a1ec10b38d624d11845e715be85cf4829bb5ab89f2401abfc164b369e2644d297fd75a0c5ede8a8eab3d7bee564d4fd2bef2c26519cb87ff01b1cc7d28fb9
+  languageName: node
+  linkType: hard
+
 "@types/tedious@npm:^4.0.14":
   version: 4.0.14
   resolution: "@types/tedious@npm:4.0.14"
@@ -19376,13 +19383,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cleye@npm:1.2.1":
-  version: 1.2.1
-  resolution: "cleye@npm:1.2.1"
+"cleye@npm:1.3.2":
+  version: 1.3.2
+  resolution: "cleye@npm:1.3.2"
   dependencies:
     terminal-columns: "npm:^1.4.1"
-    type-flag: "npm:^2.1.0"
-  checksum: 10/1cdc19cc2097f8e9298ef25053aedd9a36c730717891fa7c11ff42fda2049a9bcf56b8f4f5954039f5e6ff847000e798b2df4e414484b0593f052bc64c739d20
+    type-flag: "npm:^3.0.0"
+  checksum: 10/9e94d9caef1f09d61a87663bf55bbe9ebe1261af523414ebf1ef188d3275d02df74bc5f301a830658582a4f6ee2ae5342bd4cb2444a1da39243e49d4002db32c
   languageName: node
   linkType: hard
 
@@ -19807,7 +19814,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^2.20.0, commander@npm:^2.20.3, commander@npm:^2.7.1":
+"commander@npm:^2.20.0, commander@npm:^2.20.3":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
   checksum: 10/90c5b6898610cd075984c58c4f88418a4fb44af08c1b1415e9854c03171bec31b336b7f3e4cefe33de994b3f12b03c5e2d638da4316df83593b9e82554e7e95b
@@ -30335,18 +30342,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-swagger-doc@npm:0.3.6":
-  version: 0.3.6
-  resolution: "next-swagger-doc@npm:0.3.6"
+"next-swagger-doc@npm:0.4.1":
+  version: 0.4.1
+  resolution: "next-swagger-doc@npm:0.4.1"
   dependencies:
-    cleye: "npm:1.2.1"
+    "@types/swagger-jsdoc": "npm:6.0.4"
+    cleye: "npm:1.3.2"
     isarray: "npm:2.0.5"
-    swagger-jsdoc: "npm:6.2.5"
+    swagger-jsdoc: "npm:6.2.8"
   peerDependencies:
     next: ">=9"
   bin:
     next-swagger-doc-cli: dist/cli.js
-  checksum: 10/e06e48f674fa7579950fbbd9bd572980da8ef27108ab5e2cd2361c433115c7f68c8b985c03d89fe7cc485b39ed3374421a998af0738648602ca30ec127748402
+  checksum: 10/25b2f000dc216e153a71272db57f9e67da4433b30c601ca6df830a725a536ad868859354b6bb99a0a1969f711540f7a2d266968e3e7ead8b3fc77367beeff7a9
   languageName: node
   linkType: hard
 
@@ -36966,28 +36974,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-jsdoc@npm:6.2.5":
-  version: 6.2.5
-  resolution: "swagger-jsdoc@npm:6.2.5"
+"swagger-jsdoc@npm:6.2.8":
+  version: 6.2.8
+  resolution: "swagger-jsdoc@npm:6.2.8"
   dependencies:
     commander: "npm:6.2.0"
     doctrine: "npm:3.0.0"
     glob: "npm:7.1.6"
     lodash.mergewith: "npm:^4.6.2"
-    swagger-parser: "npm:10.0.2"
+    swagger-parser: "npm:^10.0.3"
     yaml: "npm:2.0.0-1"
   bin:
     swagger-jsdoc: bin/swagger-jsdoc.js
-  checksum: 10/d295c28f8f8f8281f0b1ce7ededac8b6ca62e2a3fb487c15bd490fb48fcc0ec8726011c319687f78a92cc48ab91d78c578f24d9b06b2752f00f0c4e89906650a
+  checksum: 10/2b229d64ba2d0410f6379bb749ff8361db91bd93a834c9b1882fe4f40d6b93d37a95e9168d35c6c5cd51e55a017a630eb8b3d9ab30c0104113c9f25fd34f181f
   languageName: node
   linkType: hard
 
-"swagger-parser@npm:10.0.2":
-  version: 10.0.2
-  resolution: "swagger-parser@npm:10.0.2"
+"swagger-parser@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "swagger-parser@npm:10.0.3"
   dependencies:
-    "@apidevtools/swagger-parser": "npm:10.0.2"
-  checksum: 10/64cc82743a313d976503be41e010a20b15f802997e8133588531bdc6d69a5940d54e76a84d6a5f062dd33133a2e430892c95d889351cf0482efecad037b9f993
+    "@apidevtools/swagger-parser": "npm:10.0.3"
+  checksum: 10/91aab14d9ebf9a638d7d6d15f6a527f0364916023dc8e67f8e2595cea71ae793786aa3c1012bd446b3f03caca2f2f5f40f916c3b50cd950eb405f5346b67d411
   languageName: node
   linkType: hard
 
@@ -38300,10 +38308,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-flag@npm:^2.1.0":
-  version: 2.2.0
-  resolution: "type-flag@npm:2.2.0"
-  checksum: 10/dcd517f83a38bc84cf404c6c180d68642254dec45d27d0b5d995422445603b282dcf19b7f2fe3af28ef09bf52f3ea3b4fc6d80f381341292823c8deb30da8c31
+"type-flag@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "type-flag@npm:3.0.0"
+  checksum: 10/1a9ddaba06355666ca5d26725604dd707d31dadf7536eb6e7e3c2520d84d773944b4e53f94da8b08bf9064be721a6b9ebbff65d524e5f03767a729966087fd32
   languageName: node
   linkType: hard
 
@@ -40490,20 +40498,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"z-schema@npm:^4.2.3":
-  version: 4.2.4
-  resolution: "z-schema@npm:4.2.4"
+"z-schema@npm:^5.0.1":
+  version: 5.0.5
+  resolution: "z-schema@npm:5.0.5"
   dependencies:
-    commander: "npm:^2.7.1"
+    commander: "npm:^9.4.1"
     lodash.get: "npm:^4.4.2"
     lodash.isequal: "npm:^4.5.0"
-    validator: "npm:^13.6.0"
+    validator: "npm:^13.7.0"
   dependenciesMeta:
     commander:
       optional: true
   bin:
     z-schema: bin/z-schema
-  checksum: 10/a1f1273ce234300479fb0b8fcd7c4a3ea1be0b63d04f1083bb8df33b10654fb3e1a1162e18c06aa2f22d257be3c60b84f3578c9cbd19134b1973d0578cd90065
+  checksum: 10/8ac2fa445f5a00e790d1f91a48aeff0ccfc340f84626771853e03f4d97cdc2f5f798cdb2e38418f7815ffc3aac3952c45caabcf077bf4f83fedf0cdef43b885b
   languageName: node
   linkType: hard
 
