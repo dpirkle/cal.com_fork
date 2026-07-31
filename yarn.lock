@@ -18820,7 +18820,7 @@ __metadata:
     typescript: "npm:5.9.3"
     vitest: "npm:4.1.8"
     vitest-fetch-mock: "npm:0.4.5"
-    vitest-mock-extended: "npm:3.1.0"
+    vitest-mock-extended: "npm:5.1.0"
   languageName: unknown
   linkType: soft
 
@@ -37809,15 +37809,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-essentials@npm:>=10.0.0":
-  version: 10.0.2
-  resolution: "ts-essentials@npm:10.0.2"
+"ts-essentials@npm:^10.2.1":
+  version: 10.2.1
+  resolution: "ts-essentials@npm:10.2.1"
   peerDependencies:
     typescript: ">=4.5.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10/f557d940acf8c80c7807530a5a2985e7426387ddda3213bda9990ee072c6360ada52bb0651ee40aa3e6c62d834b57210a61a3043d137f6b617193bb4069d9555
+  checksum: 10/60f2e1afb1d2c768b750370163ba02b0b6310c4dd16a3973e452724e59ec4efe3acc27f6266ae671cd7e26790f39efee7c8b6a42d6ebed133bc35216eba3b3b2
   languageName: node
   linkType: hard
 
@@ -39365,15 +39365,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest-mock-extended@npm:3.1.0":
-  version: 3.1.0
-  resolution: "vitest-mock-extended@npm:3.1.0"
+"vitest-mock-extended@npm:5.1.0":
+  version: 5.1.0
+  resolution: "vitest-mock-extended@npm:5.1.0"
   dependencies:
-    ts-essentials: "npm:>=10.0.0"
+    ts-essentials: "npm:^10.2.1"
   peerDependencies:
-    typescript: 3.x || 4.x || 5.x
-    vitest: ">=3.0.0"
-  checksum: 10/a64a22fbba75d10948b252e40610bed63c2825a5333fb2b666b9bc0546b45f4da6702b1b1341cded20bc28a91278dbd5ac826da59ad7cd42f504d5a2ce93d95d
+    typescript: 3.x || 4.x || 5.x || 6.x || 7.x
+    vitest: ">=4.0.0"
+  checksum: 10/8fea13e072aeb3449779e6a298f5da1014d69e0280b114cbdd637bd29870bf9f16fbf23c3b45756f271b06f53063f1be46f8c90a0a0aabd030cf43a3e98ac2ab
   languageName: node
   linkType: hard
 
