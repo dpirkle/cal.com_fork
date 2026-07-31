@@ -2009,7 +2009,7 @@ __metadata:
     ts-node: "npm:10.9.2"
     tsconfig-paths: "npm:4.2.0"
     typescript: "npm:5.9.3"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     winston: "npm:3.17.0"
     winston-transport: "npm:4.9.0"
     zod: "npm:3.25.76"
@@ -2042,7 +2042,7 @@ __metadata:
     node-mocks-http: "npm:1.16.2"
     typescript: "npm:5.9.3"
     tzdata: "npm:1.0.40"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
   languageName: unknown
   linkType: soft
@@ -2864,7 +2864,7 @@ __metadata:
     tsdav: "npm:2.0.3"
     tslog: "npm:4.9.2"
     typescript: "npm:5.9.3"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
   languageName: unknown
   linkType: soft
 
@@ -3119,7 +3119,7 @@ __metadata:
     prisma: "npm:6.16.1"
     prisma-kysely: "npm:2.2.0"
     ts-node: "npm:10.9.2"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
     zod-prisma-types: "npm:3.2.4"
   languageName: unknown
@@ -3272,7 +3272,7 @@ __metadata:
     "@stripe/stripe-js": "npm:1.35.0"
     stripe: "npm:9.16.0"
     ts-node: "npm:10.9.2"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
   languageName: unknown
   linkType: soft
@@ -3351,7 +3351,7 @@ __metadata:
     cookie: "npm:0.7.2"
     superjson: "npm:1.9.1"
     typescript: "npm:5.9.3"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
   peerDependencies:
     "@tanstack/react-query": ^5.0.0
@@ -3439,7 +3439,7 @@ __metadata:
     sonner: "npm:1.7.4"
     tailwind-merge: "npm:1.13.2"
     typescript: "npm:5.9.3"
-    uuid: "npm:11.1.0"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
   peerDependencies:
     "@tanstack/react-query": ^5.0.0
@@ -3654,7 +3654,7 @@ __metadata:
     turbo: "npm:2.5.5"
     turndown: "npm:7.2.0"
     typescript: "npm:5.9.3"
-    uuid: "npm:8.3.2"
+    uuid: "npm:14.0.1"
     zod: "npm:3.25.76"
   languageName: unknown
   linkType: soft
@@ -39052,21 +39052,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:11.1.0, uuid@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "uuid@npm:11.1.0"
+"uuid@npm:14.0.1":
+  version: 14.0.1
+  resolution: "uuid@npm:14.0.1"
   bin:
-    uuid: dist/esm/bin/uuid
-  checksum: 10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5
-  languageName: node
-  linkType: hard
-
-"uuid@npm:8.3.2, uuid@npm:^8.0.0, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 10/9a5f7aa1d6f56dd1e8d5f2478f855f25c645e64e26e347a98e98d95781d5ed20062d6cca2eecb58ba7c84bc3910be95c0451ef4161906abaab44f9cb68ffbdd1
+    uuid: dist-node/bin/uuid
+  checksum: 10/0f978fd5b0269d7acb615342aeb131f0b8d85eeb8ec34f2915d906baa3befcc14a079a430d0f8116aec6fd20c850cbfab65d1b3d1643fa81ed373c0cf9574f18
   languageName: node
   linkType: hard
 
@@ -39097,12 +39088,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "uuid@npm:11.1.0"
+  bin:
+    uuid: dist/esm/bin/uuid
+  checksum: 10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5
+  languageName: node
+  linkType: hard
+
 "uuid@npm:^11.1.1":
   version: 11.1.1
   resolution: "uuid@npm:11.1.1"
   bin:
     uuid: dist/esm/bin/uuid
   checksum: 10/16411d3dc12a08d6691616c09a75e66a7f900ba1beef6628a76fe0602f82fae2ee537b564d0b7bc95c24f58d059ca9b58c75a1e806118efb50e17822ff00ddd2
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.0.0, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 10/9a5f7aa1d6f56dd1e8d5f2478f855f25c645e64e26e347a98e98d95781d5ed20062d6cca2eecb58ba7c84bc3910be95c0451ef4161906abaab44f9cb68ffbdd1
   languageName: node
   linkType: hard
 

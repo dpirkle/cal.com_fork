@@ -149,7 +149,7 @@
     "stripe": "9.16.0",
     "superjson": "1.9.1",
     "turndown": "7.2.0",
-    "uuid": "8.3.2",
+    "uuid": "14.0.1",
     "zod": "3.25.76"
   },
   "devDependencies": {

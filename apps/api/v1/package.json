@@ -42,7 +42,7 @@
     "next-swagger-doc": "0.3.6",
     "next-validations": "0.2.1",
     "tzdata": "1.0.40",
-    "uuid": "8.3.2",
+    "uuid": "14.0.1",
     "zod": "3.25.76"
   }
 }
