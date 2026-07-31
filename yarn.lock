@@ -2603,7 +2603,7 @@ __metadata:
     "@calcom/trpc": "workspace:*"
     "@calcom/ui": "workspace:*"
     "@coss/ui": "workspace:*"
-    "@evyweb/ioctopus": "npm:1.2.0"
+    "@evyweb/ioctopus": "npm:1.4.1"
     "@tanstack/react-table": "npm:8.20.6"
     "@tanstack/react-virtual": "npm:3.10.9"
     "@testing-library/react-hooks": "npm:8.0.1"
@@ -4966,10 +4966,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@evyweb/ioctopus@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@evyweb/ioctopus@npm:1.2.0"
-  checksum: 10/6769fedf6c2fb0c2c09976ff988c714417d2733865ad919fff6205e8f59e646af1f7c2cefca6f8d4138d7d0793a316e39da8fc2636daf1eaf42e0dc3f5ecf32f
+"@evyweb/ioctopus@npm:1.4.1":
+  version: 1.4.1
+  resolution: "@evyweb/ioctopus@npm:1.4.1"
+  checksum: 10/099a28531d524dc5ca92ec290f912a486759001548f44b46f5289bbbdeced33b2d494b8c409c1172dcac37c610f377d8c51bb7668fa5aa276da8109bd4044135
   languageName: node
   linkType: hard
 

@@ -20,7 +20,7 @@
     "@calcom/trpc": "workspace:*",
     "@calcom/ui": "workspace:*",
     "@coss/ui": "workspace:*",
-    "@evyweb/ioctopus": "1.2.0",
+    "@evyweb/ioctopus": "1.4.1",
     "@tanstack/react-table": "8.20.6",
     "@tanstack/react-virtual": "3.10.9",
     "@trigger.dev/sdk": "4.3.2",
