@@ -174,7 +174,7 @@
     "@types/markdown-it": "12.2.3",
     "@types/md5": "2.3.2",
     "@types/memory-cache": "0.2.2",
-    "@types/micro": "7.3.7",
+    "@types/micro": "10.0.0",
     "@types/module-alias": "2.0.1",
     "@types/nodemailer": "6.4.5",
     "@types/qrcode": "1.4.3",

@@ -3560,7 +3560,7 @@ __metadata:
     "@types/markdown-it": "npm:12.2.3"
     "@types/md5": "npm:2.3.2"
     "@types/memory-cache": "npm:0.2.2"
-    "@types/micro": "npm:7.3.7"
+    "@types/micro": "npm:10.0.0"
     "@types/module-alias": "npm:2.0.1"
     "@types/nodemailer": "npm:6.4.5"
     "@types/qrcode": "npm:1.4.3"
@@ -16164,12 +16164,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/micro@npm:7.3.7":
-  version: 7.3.7
-  resolution: "@types/micro@npm:7.3.7"
+"@types/micro@npm:10.0.0":
+  version: 10.0.0
+  resolution: "@types/micro@npm:10.0.0"
   dependencies:
-    "@types/node": "npm:*"
-  checksum: 10/1063f62492f873199850de722ee932ea9b15e7caf285d7dadf4a2e399403e57656bfa597b32f4af09c5929f2e7b743c9b3f256a90316d66ea83c3459bc63c495
+    micro: "npm:*"
+  checksum: 10/40e5f9c3539a74a12ef10840f691d0aac321e2c893098643858db9bf25de1334e572e7f0ede18e528425591fb63d5f3b45aeb4ae241cb2ea6f2e38ea85ce0db1
   languageName: node
   linkType: hard
 
@@ -28923,7 +28923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micro@npm:10.0.1":
+"micro@npm:*, micro@npm:10.0.1":
   version: 10.0.1
   resolution: "micro@npm:10.0.1"
   dependencies:
