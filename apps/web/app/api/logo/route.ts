@@ -1,9 +1,5 @@
-import { defaultResponderForAppDir } from "app/api/defaultResponderForAppDir";
-import { cookies, headers } from "next/headers";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { z } from "zod";
-
+import fs from "node:fs";
+import path from "node:path";
 import { orgDomainConfig } from "@calcom/features/ee/organizations/lib/orgDomains";
 import {
   ANDROID_CHROME_ICON_192,
@@ -19,8 +15,12 @@ import {
 } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
 import { isTrustedInternalUrl, logBlockedSSRFAttempt, validateUrlForSSRF } from "@calcom/lib/ssrfProtection";
-
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
+import { defaultResponderForAppDir } from "app/api/defaultResponderForAppDir";
+import { cookies, headers } from "next/headers";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
 const log = logger.getSubLogger({ prefix: ["[api/logo]"] });
 
@@ -161,6 +161,43 @@ async function getTeamLogos(subdomain: string, isValidOrgDomain: boolean) {
   }
 }
 
+const mimeMap: Record<string, string> = {
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "application/javascript",
+  ".json": "application/json",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".svg": "image/svg+xml",
+  ".pdf": "application/pdf",
+  ".txt": "text/plain",
+};
+
+function getContentType(fileName: string): string {
+  const ext = path.extname(fileName).toLowerCase();
+  return mimeMap[ext] || "application/octet-stream";
+}
+
+function readLocalLogo(url: string) {
+  const fileName = url.split("/").at(-1);
+  if (fileName === undefined) {
+    return { filePath: undefined, contentType: undefined, buffer: undefined };
+  }
+  const filePath = path.join(process.cwd(), "public", fileName);
+  if (!fs.existsSync(filePath)) {
+    return { filePath, contentType: undefined, buffer: undefined };
+  }
+  const contentType = getContentType(fileName);
+  const buffer = fs.readFileSync(filePath);
+  return {
+    filePath,
+    contentType,
+    buffer,
+  };
+}
+
 /**
  * This API endpoint is used to serve the logo associated with a team if no logo is found we serve our default logo
  */
@@ -192,10 +229,16 @@ async function getHandler(request: NextRequest) {
 
   try {
     let response: Response;
+    let buffer: Buffer<ArrayBufferLike>;
+    let contentType: string;
 
     // Internal URLs (fallbacks from WEBAPP_URL) are trusted
     if (isTrustedInternalUrl(filteredLogo, WEBAPP_URL)) {
-      response = await fetch(filteredLogo);
+      const logoInfo = readLocalLogo(filteredLogo);
+      if (logoInfo.buffer === undefined) {
+        return NextResponse.json({ error: "local file read of logo failed", ...logoInfo }, { status: 404 });
+      }
+      ({ buffer, contentType } = logoInfo);
     }
     // External URLs (including data URLs) need SSRF validation
     else {
@@ -209,11 +252,10 @@ async function getHandler(request: NextRequest) {
           signal: AbortSignal.timeout(10000), // 10s conservative timeout
         });
       }
+      const arrayBuffer = await response.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+      contentType = response.headers.get("content-type") || "image/png";
     }
-
-    const arrayBuffer = await response.arrayBuffer();
-    let buffer: Buffer = Buffer.from(arrayBuffer);
-    let contentType = response.headers.get("content-type") || "image/png";
 
     // Resize the team logos if needed
     if (teamLogos[logoDefinition.source] && logoDefinition.w) {
