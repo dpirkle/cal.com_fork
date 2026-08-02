@@ -23,6 +23,7 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
   NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
   NEXT_PUBLIC_WEBSITE_TERMS_URL=$NEXT_PUBLIC_WEBSITE_TERMS_URL \
   NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL=$NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL \
+  NEXT_TELEMETRY_DISABLED=1 \
   CALCOM_TELEMETRY_DISABLED=$CALCOM_TELEMETRY_DISABLED \
   DATABASE_URL=$DATABASE_URL \
   DATABASE_DIRECT_URL=$DATABASE_URL \
@@ -67,6 +68,13 @@ COPY --from=builder /calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
 COPY scripts scripts
 RUN chmod +x scripts/*
 
+COPY --from=builder /calcom/apps/web/.next/standalone ./
+COPY --from=builder /calcom/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /calcom/apps/web/public ./public
+
+RUN chown -R node:node /calcom
+
+
 # Save value used during this build stage. If NEXT_PUBLIC_WEBAPP_URL and BUILT_NEXT_PUBLIC_WEBAPP_URL differ at
 # run-time, then start.sh will find/replace static values again.
 ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
@@ -91,4 +99,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
   CMD wget --spider http://localhost:3000 || exit 1
 
-CMD ["/calcom/scripts/start.sh"]
+USER node
+
+CMD ["/bin/sh", "/calcom/scripts/start.sh"]
